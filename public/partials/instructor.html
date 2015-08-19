@@ -1,0 +1,21 @@
+<div class="container">
+	<div class="row">
+
+			<div class="col-md-3 col-sm-3">
+
+				<div class="list-group" ng-show="instructorCtrl.authenticated">
+					<a ng-repeat="tab in instructorCtrl.navigationTabs" class="list-group-item" ui-sref-active-eq="active" ui-sref="{{ tab.state }}">{{ tab.label }}</a>
+				</div>
+
+				<div class="list-group" ng-show="!instructorCtrl.authenticated">
+					<a ng-repeat="tab in instructorCtrl.navigationTabs | filter:{loginRequired:false}" class="list-group-item" ui-sref-active-eq="active" ui-sref="{{ tab.state }}">{{ tab.label }}</a>
+					<a ng-repeat="tab in instructorCtrl.navigationTabs | filter:{loginRequired:true}" class="list-group-item" ui-sref-active-eq="active" ui-sref="{{ tab.state }}" tooltip-enable="{{tab.loginRequired && !instructorCtrl.authenticated }}" tooltip="{{ tab.tooltip }}" tooltip-placement="bottom" tooltip-animation="false">{{ tab.label }}</a>
+				</div>
+			</div>
+
+			<div class="col-md-9 col-sm-9">
+				<div ui-view><h3>instructor main menu</h3></div>
+			</div>
+	</div>
+</div>
+

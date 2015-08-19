@@ -1,0 +1,58 @@
+{
+  "name": "Project-Awesome",
+  "version": "0.1.4",
+  "description": "A framework for practice problems in computer science.",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "test": "./test/runtests.sh",
+    "test-e2e": "protractor test/e2e/config.js",
+    "test-browser": "./node_modules/.bin/karma start --single-run --browsers PhantomJS"
+  },
+  "dependencies": {
+    "body-parser": "^1.13.1",
+    "ejs": "^2.3.1",
+    "express": "~4.9.x",
+    "express-session": "^1.11.3",
+    "passport": "^0.2.2",
+    "passport-facebook": "^2.0.0",
+    "passport-google-oauth": "^0.2.0",
+    "passport-local": "^1.0.0",
+    "passport-stub": "^1.0.1",
+    "pg": "^4.4.0",
+    "pg-hstore": "^2.3.2",
+    "request": "^2.58.0",
+    "sequelize": "^3.3.2",
+    "project-awesome": "1.0.0",
+    "underscore": "^1.8.3"
+  },
+  "engines": {
+    "node": "0.12.2"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/wolfenbarger/awesome-ui-backend-node-heroku.git"
+  },
+  "keywords": [
+    "node",
+    "heroku",
+    "express"
+  ],
+  "license": "MIT",
+  "devDependencies": {
+    "angular": "^1.4.3",
+    "angular-mocks": "^1.4.3",
+    "chai": "^3.0.0",
+    "chai-as-promised": "^5.1.0",
+    "karma": "0.13.3",
+    "karma-chai": "^0.1.0",
+    "karma-chrome-launcher": "^0.2.0",
+    "karma-mocha": "^0.2.0",
+    "karma-phantomjs-launcher": "^0.2.0",
+    "mocha": "^2.2.5",
+    "phantomjs": "^1.9.17",
+    "protractor": "^2.1.0",
+    "supertest": "^1.0.1",
+    "xml2js": "^0.4.10"
+  }
+}

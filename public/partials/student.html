@@ -1,0 +1,23 @@
+<div class="container">
+
+	<div class="col-sm-6 col-sm-offset-2">
+
+		<h1><span class="fa"></span> Quizzes </h1>
+
+		<hr>
+
+		<div>
+
+			<ul class="quizzes">
+				<li ng-repeat="quiz in quizDescriptors.quizzes">
+					<span><b>{{quiz.id}}</b> </span>
+					<span style="padding-right:10px;"> </span>
+					<a href="/quiz/{{ quiz.id }}">{{ quiz.descriptor.title }}</a>
+				</li>
+			</ul>
+
+		</div>
+
+	</div>
+	
+</div>

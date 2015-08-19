@@ -1,0 +1,7 @@
+{
+  "name": "Project-Awesome",
+  "description": "A framework for practice problems in computer science.",
+  "repository": "https://github.com/pconrad/awesome-ui-backend-node-heroku.git",
+  "logo": "http://node-js-sample.herokuapp.com/node.svg",
+  "keywords": ["node", "express", "static"]
+}

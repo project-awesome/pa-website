@@ -1,0 +1,71 @@
+<div class="container">
+
+	<div class="col-sm-6 col-sm-offset-2">
+
+		<h1>{{ quizCtrl.quiz.title }}</h1>
+		<div>ID: <span id="quiz-id">{{ quizCtrl.quiz.id }}</span></div>
+		<div>Seed: <span id="quiz-seed">{{ quizCtrl.seed }}</span></div>
+
+		<hr>
+
+		<div ng-show="quizCtrl.showQuestions">
+			<h3>Questions</h3>
+			<br>
+			<ol class="custom-counter">
+				<li ng-repeat="question in quizCtrl.quiz.questions" ng-switch="question.format">
+					<i style="position:absolute; margin-left:-38px;margin-top:7px;" ng-class="{'correct-mark fa-check':question.isCorrect, 'incorrect-mark fa-close':!question.isCorrect, 'not-graded': !quizCtrl.graded }" class="fa"></i>
+					<div ng-switch-when="multiple-choice" class="question multiple-choice-question">
+						<div>{{ question.question }}</div>
+
+						<div class="radio" ng-repeat="choice in question.choices">
+							<label>
+								<input type="radio" ng-model="question.userAnswer" value="{{ $index }}">
+								<span class="multiple-choice-label"></span> {{ choice }}
+							</label>
+						</div>
+						<div ng-show="quizCtrl.graded">
+							<alert ng-show="!question.isCorrect" type="danger">
+								The correct answer is: <span class="correct-answer">{{ question.choices[question.answer] }}</span>
+							</alert>
+							<alert ng-show="question.isCorrect" type="success"> Your answer is correct. </alert>
+						</div>
+					</div>
+
+					<div ng-switch-when="input" class="question input-question">
+						<div> {{ question.question }} </div>
+						<div class="form-group input-group-sm">
+							<input type="text" class="form-control" ng-model="question.userAnswer">
+						</div>
+						<div ng-show="quizCtrl.graded">
+							<alert ng-show="!question.isCorrect" type="danger">
+								The correct answer is: <span class="correct-answer">{{ question.answer }}</span>
+							</alert>
+							<alert ng-show="question.isCorrect" type="success"> Your answer is correct. </alert>
+						</div>
+					</div>
+
+				</li>
+			</ol>
+		</div>
+		<div ng-show="quizCtrl.showKey">
+			<h3>Answers</h3>
+			<br>
+			<ol>
+				<li ng-repeat="question in quizCtrl.quiz.questions" ng-switch="question.format">
+					<div ng-switch-when="multiple-choice" class="answer multiple-choice-answer">
+						<div> {{ question.answer | indexToLetter }} </div>
+					</div>
+					<div ng-switch-when="input" class="answer input-answer">
+						<div> {{ question.answer }} </div>
+					</div>
+				</li>
+			</ol>
+		</div>
+		
+		<br>
+		<button ng-show="!quizCtrl.graded" type="submit" class="btn btn-success btn-lg" ng-click="quizCtrl.gradeQuiz()">Check Answers</button>
+		<a ng-show="quizCtrl.graded" href="/quiz/{{quizCtrl.quiz.id}}" class="btn btn-success btn-lg">Done</a>
+
+	</div>
+	
+</div>

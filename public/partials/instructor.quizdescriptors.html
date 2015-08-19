@@ -1,0 +1,20 @@
+<h1><span class="fa"></span> Quiz Descriptors</h1>
+
+<hr>
+
+<button ng-click="quizDescriptors.addQuizDescriptor()" type="submit" class="btn btn-primary btn-lg">Add New</button>
+<div class="form-group" style="padding-top:5px;">
+	<textarea class="form-control" rows="5" id="comment" ng-model="quizDescriptors.quizDescriptorText"></textarea>
+</div>
+
+<div>
+
+	<ul class="quizzes">
+		<li ng-repeat="quiz in quizDescriptors.quizzes">
+			<span><b>{{quiz.id}}</b> </span>
+			<span style="padding-right:10px;"> </span>
+			<a href="/showpage/{{ quiz.id }}">{{ quiz.descriptor | limitTo: 80 }}{{quiz.descriptor.length > 80 ? '...' : ''}}</a>
+		</li>
+	</ul>
+
+</div>

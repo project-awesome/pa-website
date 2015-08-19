@@ -1,0 +1,31 @@
+<div class="container">
+
+	<div class="col-sm-6 col-sm-offset-2">
+
+		<h1><span class="fa"></span> User Settings</h1>
+
+		<hr>
+
+		<h3><span class="fa"></span> Role Preference</h3>
+
+		<div>
+
+			<!-- Single button -->
+			<div class="btn-group" dropdown is-open="status.isopen">
+				<button type="button" class="btn btn-default btn-block dropdown-toggle" dropdown-toggle ng-disabled="disabled">
+					{{preferences.roleSelection.text}} <span class="caret"></span>
+				</button>
+				<ul class="dropdown-menu" role="menu">
+					<li ng-repeat="role in preferences.roles">
+						<a href ng-click="preferences.selectRole(role)">{{role.text}}</a>
+					</li>
+				</ul>
+			</div>
+
+			<hr>
+
+			<button ng-click="preferences.updatePreferences()" type="submit" class="btn btn-success btn-lg">Update Profile</button>
+
+		</div>
+	</div>
+</div>
