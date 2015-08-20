@@ -72,11 +72,22 @@ awesomeApp.controller('QuizCtrl', [ 'quiz', '$stateParams', function(quiz, $stat
 
     vm.graded = false;
 
+    vm.compare = function(correctAnswer, userAnswer) {
+        if (userAnswer == '' || typeof userAnswer != 'string') return false;
+        var ca = correctAnswer.replace(/ /g,'').toLowerCase().replace(/^0+/, '');
+        var ua = userAnswer.replace(/ /g,'').toLowerCase().replace(/^0+/, '');
+        return ca == ua;
+    }
+
     vm.gradeQuiz = function() {
         for (var i = 0; vm.quiz.questions.length > i; i++) {
             var userAnswer = vm.quiz.questions[i].userAnswer;
             var answer = vm.quiz.questions[i].answer;
-            vm.quiz.questions[i].isCorrect = (userAnswer == answer);
+            if (vm.quiz.questions[i].format == 'input') {
+                vm.quiz.questions[i].isCorrect = vm.compare(answer, userAnswer);
+            } else {
+                vm.quiz.questions[i].isCorrect = (answer == userAnswer);
+            }
         }
         vm.graded = true;
     }

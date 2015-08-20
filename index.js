@@ -12,4 +12,3 @@ models.sequelize.sync({ force: resetDatabase }).then(function () {
 		console.log('Node app is running on port', server.address().port);
 	});
 });
-
