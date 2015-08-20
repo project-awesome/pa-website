@@ -358,6 +358,36 @@ describe('Angular Controllers', function() {
 			controller = $controller('QuizCtrl', { $scope: {}});
 		});
 
+		describe('compare(correctAnswer, userAnswer)', function() {
+			describe('leading zeros', function() {
+				it('should remove them then compare', function() {
+					expect(controller.compare('01', '1')).to.be.true;
+				});
+			});
+			describe('uppercase', function() {
+				it('should make it lowercase then compare', function() {
+					expect(controller.compare('aBC', 'AbC')).to.be.true;
+				});
+			});
+			describe('only zero', function() {
+				it('should still work', function() {
+					expect(controller.compare('0', '00')).to.be.true;
+					expect(controller.compare('00', '0')).to.be.true;
+					expect(controller.compare('', '0')).to.be.true;
+				});
+			});
+			describe('userAnswer is empty string', function() {
+				it('should be wrong', function() {
+					expect(controller.compare('0', '')).to.be.false;
+				});
+			});
+			describe('userAnswer with whitespace', function() {
+				it('should remove before comparing', function() {
+					expect(controller.compare('12345', ' 1 2 3     4 5 ')).to.be.true;
+				});
+			});
+		});
+
 		describe('gradeQuiz()', function() {
 
 			it('should set graded to true', function() {
