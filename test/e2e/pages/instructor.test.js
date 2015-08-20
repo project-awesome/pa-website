@@ -61,11 +61,11 @@ describe('/instructor', function() {
                 done();
             });
         });
-        describe('Quiz Descriptors', function() {
+        describe('My Quiz Descriptors', function() {
             describe("when the user is unauthenticated", function() {
                 var qdNavItem, testUser;
                 before(function(done) {
-                    qdNavItem = element(by.linkText('Quiz Descriptors'));
+                    qdNavItem = element(by.linkText('My Quiz Descriptors'));
                     qdNavItem.click().then(function() {
                         done();
                     });
@@ -82,7 +82,7 @@ describe('/instructor', function() {
                     utils.protractorLogin().then(function(user) {
                         testUser = user;
                         browser.get('/instructor').then(function() {
-                            qdNavItem = element(by.linkText('Quiz Descriptors'));
+                            qdNavItem = element(by.linkText('My Quiz Descriptors'));
                             qdNavItem.click().then(function() {
                                 done();
                             });

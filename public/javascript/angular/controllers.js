@@ -34,7 +34,7 @@ awesomeApp.controller('InstructorCtrl', ['AuthService', function(AuthService) {
     var vm = this;
     vm.navigationTabs = [
         { label: "Instructor", state: "instructor", loginRequired: false},
-        { label: "Quiz Descriptors", state: "instructor.quizdescriptors", loginRequired: true, tooltip: "You must be signed in to create quiz descriptors"},
+        { label: "My Quiz Descriptors", state: "instructor.quizdescriptors", loginRequired: true, tooltip: "You must be signed in to create quiz descriptors"},
         { label: "Export Questions", state: "instructor.export", loginRequired: false},
     ];
     vm.authenticated = AuthService.isAuthenticated();
