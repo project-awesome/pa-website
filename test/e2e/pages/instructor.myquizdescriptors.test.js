@@ -9,20 +9,15 @@ var server;
 
 
 describe('/instructor/myquizdescriptors', function() {
-	var qd, testUser;
+	var testUser;
     before(function(done) {
         models.sequelize.sync({ force: true }).then(function () {
             server = app.listen(app.get('port'), function() {
 	            models.sequelize.sync({ force: true }).then(function () {
-	                utils.insertQuizDescriptor(models, 'Example Quiz Descriptor Title').then(function(res) {
-	                    qd = res;
-                        utils.protractorLogin().then(function(user) {
-                            testUser = user;
-                            browser.get('/instructor/myquizdescriptors').then(function() {
-                                done();
-                            });
-                        });
-	                });
+                    utils.protractorLogin().then(function(user) {
+                        testUser = user;
+                        done();
+                    });
 	            });
             });
         });
@@ -34,20 +29,49 @@ describe('/instructor/myquizdescriptors', function() {
     });
 
     describe('quiz descriptor list', function() {
-        it('should contain all quiz descriptors', function(done) {
+        var testUsersOnlyQD;
+        before(function(done) {
+            console.log('testUser = ' + JSON.stringify(testUser));
+            // Delete all qds that belong to testUser
+            // Insert one qd that doesn't belong to testUser
+            // Insert one qd that does belong to testUser
+            // Make sure the list only contains the one qd that belongs to testUser
+            models.QuizDescriptor.destroy({ where: { UserAwesomeId: testUser.awesome_id} }).then(function() {
+                models.User.findOne({ where: {awesome_id: testUser.awesome_id } }).then(function(tu) {
+                    tu.createQuizDescriptor( { descriptor: utils.getSampleQuizDescriptor("Test User's QD") } ).then(function(res) {
+                        testUsersOnlyQD = res;
+                        models.QuizDescriptor.create({ descriptor: utils.getSampleQuizDescriptor("Not Test User's QD") } ).then(function() {
+                            browser.get('/instructor/myquizdescriptors').then(function() {
+                                done();
+                            });
+                        });
+                    });
+                });
+            });
+        });
+
+        it('should contain one item in the list', function(done) {
             expect(element.all(by.repeater('quiz in quizDescriptors.quizzes')).count()).to.eventually.equal(1);
-            expect(element(by.repeater('quiz in quizDescriptors.quizzes').row(0).column('quiz.id')).getText()).to.eventually.equal(qd.id+'');
-            expect(element(by.repeater('quiz in quizDescriptors.quizzes').row(0).column('quiz.descriptor')).getText()).to.eventually.include(JSON.stringify(qd.descriptor).substring(0,80));
             done();
         });
+
+        describe("quiz id ", function() {
+            it("should correspond to that of testUser's only qd", function(done) {
+                expect(element(by.repeater('quiz in quizDescriptors.quizzes').row(0).column('quiz.id')).getText()).to.eventually.equal(testUsersOnlyQD.id+'');
+                done();
+            });
+        });
+
     });
 
     describe('Add New', function() {
         var addNew, textArea;
         before(function(done) {
-            addNew = element(by.buttonText('Add New'));
-            textArea = element(by.id('comment'));
-            done();
+            browser.get('/instructor/myquizdescriptors').then(function() {
+                addNew = element(by.buttonText('Add New'));
+                textArea = element(by.id('comment'));
+                done();
+            });
         });
 
         beforeEach(function(done) {

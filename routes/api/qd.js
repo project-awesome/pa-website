@@ -51,12 +51,12 @@ module.exports = function(app) {
     app.get('/api/qd', function(req, res) {
 
         models.QuizDescriptor.findAll().then(function(qds) {
-                    if (!qds) {
-                        res.status(500).end();
-                    } else {
-                        res.json(qds);
-                    }
-                });
+            if (!qds) {
+                res.status(500).end();
+            } else {
+                res.json(qds);
+            }
+        });
         
     });
 

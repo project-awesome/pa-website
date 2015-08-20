@@ -36,8 +36,8 @@ awesomeApp.config(['$stateProvider', '$urlRouterProvider', '$locationProvider', 
 		controller: 'QuizDescriptorCtrl',
 		controllerAs: 'quizDescriptors',
 		resolve: {
-			qds: ['Restangular', function(Restangular) {
-				return Restangular.all('qd').getList();
+			qds: ['Restangular', 'AuthService', function(Restangular, AuthService) {
+				return Restangular.one('user', AuthService.getAwesomeId()).getList('qd');
 			}]
 		}
 
