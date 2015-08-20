@@ -30,8 +30,8 @@ awesomeApp.config(['$stateProvider', '$urlRouterProvider', '$locationProvider', 
 		controller: 'InstructorCtrl',
 		controllerAs: 'instructorCtrl'
 	})
-	.state('instructor.quizdescriptors', {
-		url: '/quizdescriptors',
+	.state('instructor.myquizdescriptors', {
+		url: '/myquizdescriptors',
 		templateUrl: 'partials/instructor.quizdescriptors.html',
 		controller: 'QuizDescriptorCtrl',
 		controllerAs: 'quizDescriptors',
@@ -122,7 +122,7 @@ awesomeApp.config(['$stateProvider', '$urlRouterProvider', '$locationProvider', 
 
 	$rootScope.$on( "$stateChangeStart", function(event, toState, toParams, fromState, fromParams) {
 		Flash.dismiss();
-		var requiresAuth = ['instructor.quizdescriptors', 'usersettings'];
+		var requiresAuth = ['instructor.myquizdescriptors', 'usersettings'];
 		var requiresUnauth = ['login'];
 		var authenticated = AuthService.isAuthenticated();
 		//console.log(toState);

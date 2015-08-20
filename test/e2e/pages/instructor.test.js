@@ -94,8 +94,8 @@ describe('/instructor', function() {
                         done();
                     });
                 });
-                it('should go to /instructor/quizdescriptors', function(done) {
-                    expect(browser.getCurrentUrl()).to.eventually.include('/instructor/quizdescriptors');
+                it('should go to /instructor/myquizdescriptors', function(done) {
+                    expect(browser.getCurrentUrl()).to.eventually.include('/instructor/myquizdescriptors');
                     done();
                 });
                 it('should have class active', function(done) {

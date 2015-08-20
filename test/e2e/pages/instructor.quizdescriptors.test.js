@@ -8,7 +8,7 @@ var utils = require('../../utils');
 var server;
 
 
-describe('/instructor/quizdescriptors', function() {
+describe('/instructor/myquizdescriptors', function() {
 	var qd, testUser;
     before(function(done) {
         models.sequelize.sync({ force: true }).then(function () {
@@ -18,7 +18,7 @@ describe('/instructor/quizdescriptors', function() {
 	                    qd = res;
                         utils.protractorLogin().then(function(user) {
                             testUser = user;
-                            browser.get('/instructor/quizdescriptors').then(function() {
+                            browser.get('/instructor/myquizdescriptors').then(function() {
                                 done();
                             });
                         });
