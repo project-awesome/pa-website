@@ -11,14 +11,12 @@ var server;
 describe('/instructor/myquizdescriptors', function() {
 	var testUser;
     before(function(done) {
-        models.sequelize.sync({ force: true }).then(function () {
-            server = app.listen(app.get('port'), function() {
-	            models.sequelize.sync({ force: true }).then(function () {
-                    utils.protractorLogin().then(function(user) {
-                        testUser = user;
-                        done();
-                    });
-	            });
+        server = app.listen(app.get('port'), function() {
+            utils.resetEnvironment(app).then(function() {
+                utils.authenticateTestUser().then(function(user) {
+                    testUser = user;
+                    done();
+                });
             });
         });
     });

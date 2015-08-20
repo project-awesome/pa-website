@@ -10,8 +10,8 @@ var server;
 describe('Navigation Bar', function() {
 
     before(function(done) {
-        models.sequelize.sync({ force: true }).then(function () {
-            server = app.listen(app.get('port'), function() {
+        server = app.listen(app.get('port'), function() {
+            utils.resetEnvironment(app).then(function() {
                 done();
             });
         });
@@ -63,9 +63,13 @@ describe('Navigation Bar', function() {
 
     describe('Home Button', function() {
 
-        it('should take us home when home is clicked', function(done) {
+        before(function(done) {
             browser.get('/student');
             browser.findElement(by.id('home-button')).click();
+            done();
+        });
+
+        it('should take us home when home is clicked', function(done) {
             expect(browser.getCurrentUrl()).to.eventually.equal(browser.baseUrl + '/');
             done();
         });
@@ -73,20 +77,32 @@ describe('Navigation Bar', function() {
     
     describe('User Dropdown Menu', function () {
         var testUser;
-        beforeEach(function(done) {
-            utils.protractorLogin().then(function(user) {
+        before(function(done) {
+            utils.authenticateTestUser().then(function(user) {
                 testUser = user;
                 done();
             });
         });
 
-        afterEach(function(done) {
-            utils.protractorLogout().then(function() {
-                done();
-            });
+        after(function(done) {
+            utils.unauthenticateTestUser();
+            done();
         });
 
         describe('Settings Dropdown', function() {
+
+            before(function(done) {
+                browser.get('/').then(function() {
+                    done();
+                });
+            });
+
+            beforeEach(function(done) {
+                element(by.id('user-dropdown')).click().then(function() {
+                    done();
+                });
+            });
+
             it('should navigate to the /usersettings page', function(done) {
                 element(by.id('user-links')).element(by.cssContainingText('a','Settings')).click();
                 expect(browser.getCurrentUrl()).to.eventually.equal(browser.baseUrl + '/usersettings');

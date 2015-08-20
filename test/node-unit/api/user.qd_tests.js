@@ -14,7 +14,7 @@ describe('User.QuizDescriptor API', function() {
 	describe('GET /api/user/:awesome_id/qd', function() {
 		var validAwesomeId, invalidAwesomeId;
 		before(function(done) {
-			utils.resetEnvironment(app, models).then(function() {
+			utils.resetEnvironment(app).then(function() {
 				utils.authenticateTestUser().then(function(user) {
 					testUser = user;
 					validAwesomeId = testUser.awesome_id;

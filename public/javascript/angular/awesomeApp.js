@@ -40,7 +40,6 @@ awesomeApp.config(['$stateProvider', '$urlRouterProvider', '$locationProvider', 
 				return Restangular.one('user', AuthService.getAwesomeId()).getList('qd');
 			}]
 		}
-
 	})
 	.state('instructor.export', {
 		url: '/export',

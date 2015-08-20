@@ -9,11 +9,9 @@ var server;
 
 describe('/instructor', function() {
     before(function(done) {
-        models.sequelize.sync({ force: true }).then(function () {
-            server = app.listen(app.get('port'), function() {
-	            models.sequelize.sync({ force: true }).then(function () {
-                    done();
-	            });
+        server = app.listen(app.get('port'), function() {
+            utils.resetEnvironment(app).then(function() {
+                done();
             });
         });
     });
@@ -79,7 +77,7 @@ describe('/instructor', function() {
             describe("when the user is authenticated", function() {
                 var qdNavItem, testUser;
                 before(function(done) {
-                    utils.protractorLogin().then(function(user) {
+                    utils.authenticateTestUser().then(function(user) {
                         testUser = user;
                         browser.get('/instructor').then(function() {
                             qdNavItem = element(by.linkText('My Quiz Descriptors'));
@@ -90,9 +88,8 @@ describe('/instructor', function() {
                     });
                 });
                 after(function(done) {
-                    utils.protractorLogout().then(function() {
-                        done();
-                    });
+                    utils.unauthenticateTestUser();
+                    done();
                 });
                 it('should go to /instructor/myquizdescriptors', function(done) {
                     expect(browser.getCurrentUrl()).to.eventually.include('/instructor/myquizdescriptors');
