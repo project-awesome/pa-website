@@ -47,15 +47,13 @@ describe('/instructor/myquizdescriptors', function() {
             });
         });
 
-        it('should contain one item in the list', function(done) {
+        it('should contain one item in the list', function() {
             expect(element.all(by.repeater('quiz in quizDescriptors.quizzes')).count()).to.eventually.equal(1);
-            done();
         });
 
         describe("quiz id ", function() {
-            it("should correspond to that of testUser's only qd", function(done) {
+            it("should correspond to that of testUser's only qd", function() {
                 expect(element(by.repeater('quiz in quizDescriptors.quizzes').row(0).column('quiz.id')).getText()).to.eventually.equal(testUsersOnlyQD.id+'');
-                done();
             });
         });
 

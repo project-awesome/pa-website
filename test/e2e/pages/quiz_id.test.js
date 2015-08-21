@@ -49,9 +49,8 @@ describe('/quiz/:id', function() {
         		browser.get('/quiz/'+qd.id);
         		done();
         	});
-	        it('should display the quiz title on the page', function(done) {
+	        it('should display the quiz title on the page', function() {
 	            expect(element(by.binding('quizStarter.qd.descriptor.title')).getText()).to.eventually.equal(qd.descriptor.title);
-	            done();
 	        });
         });
 
@@ -62,17 +61,15 @@ describe('/quiz/:id', function() {
                 done();
             });
 
-            it('should go to /quiz/:id/:seed when the user clicks the Start Quiz button', function(done) {
+            it('should go to /quiz/:id/:seed when the user clicks the Start Quiz button', function() {
                 element(by.buttonText('Start Quiz')).click();
                 expect(browser.getCurrentUrl()).to.eventually.include(browser.baseUrl + '/quiz/' + qd.id + '/');
-                done();
             });
 
-            it('should go to /quiz/:id/:seed with seed corresponding to the valid seed input', function(done) {
+            it('should go to /quiz/:id/:seed with seed corresponding to the valid seed input', function() {
                 element(by.model('quizStarter.seed')).sendKeys('abcd4444');
                 element(by.buttonText('Start Quiz')).click();
                 expect(browser.getCurrentUrl()).to.eventually.include(browser.baseUrl + '/quiz/' + qd.id + '/abcd4444');
-                done();
             });
             
         });

@@ -33,13 +33,11 @@ describe('/instructor', function() {
                     done();
                 });
             });
-            it('should be the first navigation item', function(done) {
+            it('should be the first navigation item', function() {
                 expect(firstNavItem.getText()).to.eventually.equal('Instructor');
-                done();
             });
-            it('should have class active', function(done) {
+            it('should have class active', function() {
                 expect(firstNavItem.getAttribute('class')).to.eventually.include('active');
-                done();
             });
         });
         describe('Export Questions', function() {
@@ -50,13 +48,11 @@ describe('/instructor', function() {
                     done();
                 });
             });
-            it('should go to /instructor/export', function(done) {
+            it('should go to /instructor/export', function() {
                 expect(browser.getCurrentUrl()).to.eventually.include('/instructor/export');
-                done();
             });
-            it('should have class active', function(done) {
+            it('should have class active', function() {
                 expect(exportNavItem.getAttribute('class')).to.eventually.include('active');
-                done();
             });
         });
         describe('All Quiz Descriptors', function() {
@@ -67,13 +63,11 @@ describe('/instructor', function() {
                     done();
                 });
             });
-            it('should go to /instructor/allquizdescriptors', function(done) {
+            it('should go to /instructor/allquizdescriptors', function() {
                 expect(browser.getCurrentUrl()).to.eventually.include('/instructor/allquizdescriptors');
-                done();
             });
-            it('should have class active', function(done) {
+            it('should have class active', function() {
                 expect(allQDsNavItem.getAttribute('class')).to.eventually.include('active');
-                done();
             });
         });
         describe('My Quiz Descriptors', function() {
@@ -85,9 +79,8 @@ describe('/instructor', function() {
                         done();
                     });
                 });
-                it('should redirect user to /login', function(done) {
+                it('should redirect user to /login', function() {
                     expect(browser.getCurrentUrl()).to.eventually.include('/login');
-                    done();
                 });
             });
 
@@ -104,17 +97,14 @@ describe('/instructor', function() {
                         });
                     });
                 });
-                after(function(done) {
+                after(function() {
                     utils.unauthenticateTestUser();
-                    done();
                 });
-                it('should go to /instructor/myquizdescriptors', function(done) {
+                it('should go to /instructor/myquizdescriptors', function() {
                     expect(browser.getCurrentUrl()).to.eventually.include('/instructor/myquizdescriptors');
-                    done();
                 });
-                it('should have class active', function(done) {
+                it('should have class active', function() {
                     expect(qdNavItem.getAttribute('class')).to.eventually.include('active');
-                    done();
                 });
             });
         });

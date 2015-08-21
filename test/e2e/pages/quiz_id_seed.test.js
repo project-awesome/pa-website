@@ -32,10 +32,9 @@ describe('/quiz/:id/:seed', function() {
     		browser.get('/quiz/'+qd.id+'/'+ seed);
     		done();
     	});
-        it('should successfuly get the given url, but the page should render the 404 template', function(done) {
+        it('should successfuly get the given url, but the page should render the 404 template', function() {
         	expect(browser.getCurrentUrl()).to.eventually.include('/quiz/'+qd.id+'/'+ seed);
         	element(by.id('fourOFour'));
-        	done();
         });
     });
 
@@ -44,19 +43,16 @@ describe('/quiz/:id/:seed', function() {
     	before(function(done) {
 			browser.get('/quiz/'+qd.id+'/'+ seed + '?q=1&k=1').then(done);
     	});
-        it('should display the quiz title on the page', function(done) {
+        it('should display the quiz title on the page', function() {
             expect(element(by.binding('quizCtrl.quiz.title')).getText()).to.eventually.equal(qd.descriptor.title);
-            done();
         });
-        it('should display the same seed on the page and in the url', function(done) {
+        it('should display the same seed on the page and in the url', function() {
             expect(element(by.id('quiz-seed')).getText()).to.eventually.equal(seed);
             expect(browser.getCurrentUrl()).to.eventually.include('/'+qd.id+'/'+seed);
-            done();
         });
-        it('should display the same quiz id on the page and in the url', function(done) {
+        it('should display the same quiz id on the page and in the url', function() {
             expect(element(by.id('quiz-id')).getText()).to.eventually.equal(qd.id+'');
             expect(browser.getCurrentUrl()).to.eventually.include('/'+qd.id+'/'+seed);
-            done();
         });
     });
                     

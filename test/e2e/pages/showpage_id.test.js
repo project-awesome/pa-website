@@ -49,13 +49,11 @@ describe('/showpage/:id', function() {
         		browser.get('/showpage/'+qd.id);
         		done();
         	});
-            it('should navigation to the url', function(done) {
+            it('should navigation to the url', function() {
                 expect(browser.getCurrentUrl()).to.eventually.include('/showpage/' + qd.id);
-                done();
             });
-            it('should display the quiz descriptor', function(done) {
+            it('should display the quiz descriptor', function() {
                 expect(element(by.id('qd-title')).getText()).to.eventually.equal(qd.descriptor.title);
-                done();
             });
         });
 

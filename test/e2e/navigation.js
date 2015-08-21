@@ -23,40 +23,39 @@ describe('Navigation Bar', function() {
     });
 
     describe('Navigation Dropdown Menu', function () {
-
+        var navDropDown;
         before(function(done) {
-            browser.get('/');
-            done();
-        });
-
-        beforeEach(function(done) {
-            browser.findElement(by.id('navigation-dropdown')).click().then(function() {
+            browser.get('/').then(function() {
+                navDropDown = element(by.id('navigation-dropdown'));
                 done();
             });
         });
-
-        it('should navigate to /student', function(done) {
-            element(by.id('navigation-links')).element(by.cssContainingText('a','Student')).click();
-            expect(browser.getCurrentUrl()).to.eventually.equal(browser.baseUrl + '/student');
-            done();
+        beforeEach(function() {
+            navDropDown.click();
         });
 
-        it('should navigate to /instructor', function(done) {
-            element(by.id('navigation-links')).element(by.cssContainingText('a','Instructor')).click();
-            expect(browser.getCurrentUrl()).to.eventually.equal(browser.baseUrl + '/instructor');
-            done();
+        it('should navigate to /student', function() {
+            navDropDown.element(by.cssContainingText('a','Student')).click().then(function() {
+                expect(browser.getCurrentUrl()).to.eventually.equal(browser.baseUrl + '/student');
+            });
+        });
+
+        it('should navigate to /instructor', function() {
+            navDropDown.element(by.cssContainingText('a','Instructor')).click().then(function() {
+                expect(browser.getCurrentUrl()).to.eventually.equal(browser.baseUrl + '/instructor');
+            });
         });
         
-        it('should navigate to /author', function(done) {
-            element(by.id('navigation-links')).element(by.cssContainingText('a','Author')).click();
-            expect(browser.getCurrentUrl()).to.eventually.equal(browser.baseUrl + '/author');
-            done();
+        it('should navigate to /author', function() {
+            navDropDown.element(by.cssContainingText('a','Author')).click().then(function() {
+                expect(browser.getCurrentUrl()).to.eventually.equal(browser.baseUrl + '/author');
+            });
         });
         
-        it('should navigate to /developer', function(done) {
-            element(by.id('navigation-links')).element(by.cssContainingText('a','Developer')).click();
-            expect(browser.getCurrentUrl()).to.eventually.equal(browser.baseUrl + '/developer');
-            done();
+        it('should navigate to /developer', function() {
+            navDropDown.element(by.cssContainingText('a','Developer')).click().then(function() {
+                expect(browser.getCurrentUrl()).to.eventually.equal(browser.baseUrl + '/developer');
+            });
         });
 
     });
@@ -69,9 +68,8 @@ describe('Navigation Bar', function() {
             done();
         });
 
-        it('should take us home when home is clicked', function(done) {
+        it('should take us home when home is clicked', function() {
             expect(browser.getCurrentUrl()).to.eventually.equal(browser.baseUrl + '/');
-            done();
         });
     });
     
@@ -84,9 +82,8 @@ describe('Navigation Bar', function() {
             });
         });
 
-        after(function(done) {
+        after(function() {
             utils.unauthenticateTestUser();
-            done();
         });
 
         describe('Settings Dropdown', function() {
@@ -97,10 +94,8 @@ describe('Navigation Bar', function() {
                 });
             });
 
-            beforeEach(function(done) {
-                element(by.id('user-dropdown')).click().then(function() {
-                    done();
-                });
+            beforeEach(function() {
+                element(by.id('user-dropdown')).click();
             });
 
             it('should navigate to the /usersettings page', function(done) {
