@@ -62,11 +62,12 @@ describe('/instructor/myquizdescriptors', function() {
     });
 
     describe('Add New', function() {
-        var addNew, textArea;
+        var addNew, textArea, flashMessageDiv;
         before(function(done) {
             browser.get('/instructor/myquizdescriptors').then(function() {
                 addNew = element(by.buttonText('Add New'));
                 textArea = element(by.id('comment'));
+                flashMessageDiv = element(by.id('flash-message-div'));
                 done();
             });
         });
@@ -80,21 +81,20 @@ describe('/instructor/myquizdescriptors', function() {
             it('should not add the qd to the list', function(done) {
                 textArea.sendKeys('{"ayyyy":"lmao"}');
                 addNew.click();
-                expect(element(by.id('flash-message-div')).isPresent()).to.eventually.be.true;
+                expect(flashMessageDiv.getText()).to.eventually.include('Not Saved: Invalid Syntax.');
                 expect(element.all(by.repeater('quiz in quizDescriptors.quizzes')).count()).to.eventually.equal(1);
                 expect(textArea.getAttribute('value')).to.eventually.equal('{"ayyyy":"lmao"}');
                 done();
             });
         });
-        
-
 
         describe('valid quiz descriptor', function() {
             it('should add the qd to the list and display a success flash message', function(done) {
                 var sampleQD = utils.getSampleQuizDescriptor('testQD1');
                 textArea.sendKeys(JSON.stringify(sampleQD));
                 addNew.click();
-                expect(element(by.id('flash-message-div')).isPresent()).to.eventually.be.true;
+                expect(flashMessageDiv.isPresent()).to.eventually.be.true;
+                expect(flashMessageDiv.getText()).to.eventually.include('Quiz Descriptor Saved: id =');
                 expect(element.all(by.repeater('quiz in quizDescriptors.quizzes')).count()).to.eventually.equal(2);
                 expect(textArea.getAttribute('value')).to.eventually.equal("");
                 done();
