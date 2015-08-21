@@ -29,7 +29,6 @@ describe('/instructor/myquizdescriptors', function() {
     describe('quiz descriptor list', function() {
         var testUsersOnlyQD;
         before(function(done) {
-            console.log('testUser = ' + JSON.stringify(testUser));
             // Delete all qds that belong to testUser
             // Insert one qd that doesn't belong to testUser
             // Insert one qd that does belong to testUser

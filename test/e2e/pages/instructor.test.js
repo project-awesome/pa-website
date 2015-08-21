@@ -59,6 +59,23 @@ describe('/instructor', function() {
                 done();
             });
         });
+        describe('All Quiz Descriptors', function() {
+            var allQDsNavItem;
+            before(function(done) {
+                allQDsNavItem = element(by.linkText('All Quiz Descriptors'));
+                allQDsNavItem.click().then(function() {
+                    done();
+                });
+            });
+            it('should go to /instructor/allquizdescriptors', function(done) {
+                expect(browser.getCurrentUrl()).to.eventually.include('/instructor/allquizdescriptors');
+                done();
+            });
+            it('should have class active', function(done) {
+                expect(allQDsNavItem.getAttribute('class')).to.eventually.include('active');
+                done();
+            });
+        });
         describe('My Quiz Descriptors', function() {
             describe("when the user is unauthenticated", function() {
                 var qdNavItem, testUser;

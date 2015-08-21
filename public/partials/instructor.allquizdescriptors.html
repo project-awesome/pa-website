@@ -1,0 +1,15 @@
+<h1><span class="fa"></span> Quiz Descriptors</h1>
+
+<hr>
+
+<div>
+
+	<ul class="quizzes">
+		<li ng-repeat="quiz in quizDescriptors.quizzes">
+			<span><b>{{quiz.id}}</b> </span>
+			<span style="padding-right:10px;"> </span>
+			<a href="/showpage/{{ quiz.id }}">{{ quiz.descriptor | limitTo: 80 }}{{quiz.descriptor.length > 80 ? '...' : ''}}</a>
+		</li>
+	</ul>
+
+</div>

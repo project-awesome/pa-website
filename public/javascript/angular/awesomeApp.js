@@ -30,6 +30,17 @@ awesomeApp.config(['$stateProvider', '$urlRouterProvider', '$locationProvider', 
 		controller: 'InstructorCtrl',
 		controllerAs: 'instructorCtrl'
 	})
+	.state('instructor.allquizdescriptors', {
+		url: '/allquizdescriptors',
+		templateUrl: 'partials/instructor.allquizdescriptors.html',
+		controller: 'QuizDescriptorCtrl',
+		controllerAs: 'quizDescriptors',
+		resolve: {
+			qds: ['Restangular', function(Restangular) {
+				return Restangular.all('qd').getList();
+			}]
+		}
+	})
 	.state('instructor.myquizdescriptors', {
 		url: '/myquizdescriptors',
 		templateUrl: 'partials/instructor.quizdescriptors.html',
