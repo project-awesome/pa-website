@@ -127,9 +127,6 @@ awesomeApp.controller('QuizDescriptorCtrl', [ 'qds', 'Flash', 'Restangular', fun
     vm.quizzes = qds;
     vm.quizDescriptorText = "";
 
-    vm.clickedDescriptor = function(selection) {
-        window.location.href = '/quizdescriptor/' + selection.id;
-    }
     vm.addQuizDescriptor = function() {
         var qdJSON;
         try {

@@ -110,6 +110,22 @@ awesomeApp.config(['$stateProvider', '$urlRouterProvider', '$locationProvider', 
 			}]
 		}
 	})
+	.state('quizsettings', {
+		url: '/quizdescriptor/:id/settings',
+		templateUrl: 'partials/quizsettings.html',
+		controller: 'ShowDescriptorCtrl',
+		controllerAs: 'qdCtrl',
+		resolve: {
+			qd: ['Restangular', 'AuthService', '$stateParams', function(Restangular, AuthService, $stateParams) {
+				return Restangular.one('qd', $stateParams.id).get().then(function(qd) {
+					if (qd.UserAwesomeId != AuthService.getAwesomeId())
+						throw { status: 404 };
+					else
+						return qd;
+				});
+			}]
+		}
+	})
 	.state('404', {
 		templateUrl: 'partials/404.html',
 	});
@@ -131,7 +147,7 @@ awesomeApp.config(['$stateProvider', '$urlRouterProvider', '$locationProvider', 
 
 	$rootScope.$on( "$stateChangeStart", function(event, toState, toParams, fromState, fromParams) {
 		Flash.dismiss();
-		var requiresAuth = ['instructor.myquizdescriptors', 'usersettings'];
+		var requiresAuth = ['instructor.myquizdescriptors', 'usersettings', 'quizsettings'];
 		var requiresUnauth = ['login'];
 		var authenticated = AuthService.isAuthenticated();
 		if (!authenticated) {
