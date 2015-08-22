@@ -1,6 +1,6 @@
 describe('Angular Controllers', function() {
 	
-	describe('ShowDescriptorCtrl', function() {
+	describe('QuizDescriptorCtrl', function() {
 		
   		var $controller, controller, AuthServiceMock = {}, QDMock = {};
 		beforeEach(function() {
@@ -18,7 +18,7 @@ describe('Angular Controllers', function() {
 			inject(function(_$controller_) {
 				$controller = _$controller_;
 			});
-			controller = $controller('ShowDescriptorCtrl', { $scope: {} });
+			controller = $controller('QuizDescriptorCtrl', { $scope: {} });
 		});
 
 		describe('isOwner', function() {

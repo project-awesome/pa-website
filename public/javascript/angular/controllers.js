@@ -1,6 +1,6 @@
 'use strict';
 
-awesomeApp.controller("ShowDescriptorCtrl", ['qd', 'AuthService', function(qd, AuthService) {
+awesomeApp.controller("QuizDescriptorCtrl", ['qd', 'AuthService', function(qd, AuthService) {
     var vm = this;
     vm.qd = qd;
     vm.isOwner = AuthService.getAwesomeId() == qd.UserAwesomeId;

@@ -102,7 +102,7 @@ awesomeApp.config(['$stateProvider', '$urlRouterProvider', '$locationProvider', 
 	.state('quizdescriptor', {
 		url: '/quizdescriptor/:id',
 		templateUrl: 'partials/quizdescriptor.html',
-		controller: 'ShowDescriptorCtrl',
+		controller: 'QuizDescriptorCtrl',
 		controllerAs: 'qdCtrl',
 		resolve: {
 			qd: ['Restangular', '$stateParams', function(Restangular, $stateParams) {
@@ -113,7 +113,7 @@ awesomeApp.config(['$stateProvider', '$urlRouterProvider', '$locationProvider', 
 	.state('quizsettings', {
 		url: '/quizdescriptor/:id/settings',
 		templateUrl: 'partials/quizsettings.html',
-		controller: 'ShowDescriptorCtrl',
+		controller: 'QuizDescriptorCtrl',
 		controllerAs: 'qdCtrl',
 		resolve: {
 			qd: ['Restangular', 'AuthService', '$stateParams', function(Restangular, AuthService, $stateParams) {
