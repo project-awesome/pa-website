@@ -135,6 +135,63 @@ describe('QuizDescriptor API', function() {
                     });
                 });
 
+                describe('updating descriptor', function() {
+                    describe('when descriptor is not valid', function() {
+                        it('should respond with error 400', function(done) {
+                            request(app)
+                            .put('/api/qd/'+myQD.id)
+                            .send({descriptor:{"ayy":"lmao"}})
+                            .expect(400)
+                            .end(function(err, res) {
+                                if (err) return done(err);
+                                done();
+                            });
+                        });
+                    });
+                    describe('when descriptor is valid', function() {
+                        describe('when the user has already published the quiz', function() {
+                            before(function(done) {
+                                myQD.updateAttributes({published:true}).then(function() {
+                                    done();
+                                });
+                            });
+                            after(function(done) {
+                                myQD.updateAttributes({published:false}).then(function() {
+                                    done();
+                                });
+                            });
+                            it('should respond with error 400', function(done) {
+                                request(app)
+                                .put('/api/qd/'+myQD.id)
+                                .send({descriptor:utils.getSampleQuizDescriptor('New Descriptor')})
+                                .expect(400)
+                                .end(function(err, res) {
+                                    if (err) return done(err);
+                                    done();
+                                });
+                            });
+                        });
+                        describe('when the user has not already published the quiz', function() {
+                            before(function(done) {
+                                myQD.updateAttributes({published:false}).then(function() {
+                                    done();
+                                });
+                            });
+                            it('should respond with 200 and with body where qd.descriptor has been updated', function(done) {
+                                var newDescriptor = utils.getSampleQuizDescriptor('New Descriptor');
+                                request(app)
+                                .put('/api/qd/'+myQD.id)
+                                .send({descriptor:newDescriptor})
+                                .expect(200)
+                                .end(function(err, res) {
+                                    if (err) return done(err);
+                                    expect(res.body.descriptor).to.eql(newDescriptor);
+                                    done();
+                                });
+                            });
+                        });
+                    });
+                });
                 describe('updating published', function() {
                     describe('when setting published to false', function() {
                         it('should respond with error 400', function(done) {

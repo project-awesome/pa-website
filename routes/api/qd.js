@@ -71,6 +71,18 @@ module.exports = function(app) {
                 updateRequest.published = true;
                 emptyRequest = false;
             }
+            if ('descriptor' in req.body) {
+                if (projectAwesome.isValidQuizDescriptor(req.body.descriptor) !== true) {
+                    res.status(400).end();
+                    return;
+                }
+                if (qd.published === true) {
+                    res.status(400).end();
+                    return;
+                }
+                updateRequest.descriptor = req.body.descriptor;
+                emptyRequest = false;
+            }
             if (emptyRequest) {
                 res.status(400).end();
                 return;
