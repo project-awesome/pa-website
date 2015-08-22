@@ -1,46 +1,15 @@
 <div class="container">
 
-	<div class="col-sm-6 col-sm-offset-2">
+	<div class="col-sm-8 col-sm-offset-2">
 
-		<h1><span class="fa">{{ quizStarter.qd.descriptor.title }}</span></h1>
+		<h1><span class="fa" id="qd-title">{{ qdCtrl.qd.descriptor.title }}</span></h1>
+		<a role="button" ng-show="qdCtrl.isOwner" id="qd-settings" href="/quizdescriptor/{{qdCtrl.qd.id}}/settings">Settings</a>
 
 		<hr>
 
 		<div>
-			<form name="quizForm">
-				<div class="form-group" ng-class="{'has-error': quizForm.seed.$error.pattern}">
-					<label>Enter Quiz Seed</label>
-					<input name="seed" type="text" ng-pattern="/^[0-9a-fA-F]{8}$/" class="form-control" ng-model="quizStarter.seed" placeholder="Random" >
-					<span class="help-block" ng-class="{ 'invisible': !quizForm.seed.$error.pattern }">Must be an 8 digit hexidecimal.</span>
-				</div>
-				<div class="form-group">
-					<label>Display Options</label>
-					<div class="radio">
-						<label>
-							<input type="radio" ng-model="quizStarter.displayOption" value="questions">
-							Questions
-						</label>
-					</div>
-					<div class="radio">
-						<label>
-							<input type="radio" ng-model="quizStarter.displayOption" value="questions_answers">
-							Questions &amp; Answers
-						</label>
-					</div>
-					<div class="radio">
-						<label>
-							<input type="radio" ng-model="quizStarter.displayOption" value="answers">
-							Answers
-						</label>
-					</div>
-				</div>
-			</form>
-
+			<pre id="qd-text">{{ qdCtrl.qd | json }}</pre>
 		</div>
-		
-		<br>
-
-		<button type="submit" class="btn btn-success btn-lg" ng-click="quizStarter.startQuiz()">Start Quiz</button>
 
 	</div>
 	

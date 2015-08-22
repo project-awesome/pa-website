@@ -13,7 +13,7 @@
 		<li ng-repeat="quiz in quizDescriptors.quizzes">
 			<span><b>{{quiz.id}}</b> </span>
 			<span style="padding-right:10px;"> </span>
-			<a href="/showpage/{{ quiz.id }}">{{ quiz.descriptor | limitTo: 80 }}{{quiz.descriptor.length > 80 ? '...' : ''}}</a>
+			<a href="/quizdescriptor/{{ quiz.id }}">{{ quiz.descriptor | limitTo: 80 }}{{quiz.descriptor.length > 80 ? '...' : ''}}</a>
 		</li>
 	</ul>
 

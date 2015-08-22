@@ -79,7 +79,7 @@ awesomeApp.config(['$stateProvider', '$urlRouterProvider', '$locationProvider', 
 	})
 	.state('quizoptions', {
 		url: '/quiz/:id',
-		templateUrl: 'partials/quizdescriptor.html',
+		templateUrl: 'partials/quizoptions.html',
 		controller: 'QuizStartCtrl',
 		controllerAs: 'quizStarter',
 		resolve: {
@@ -99,9 +99,9 @@ awesomeApp.config(['$stateProvider', '$urlRouterProvider', '$locationProvider', 
 			}]
 		}
 	})
-	.state('showpage', {
-		url: '/showpage/:id',
-		templateUrl: 'partials/showpage.html',
+	.state('quizdescriptor', {
+		url: '/quizdescriptor/:id',
+		templateUrl: 'partials/quizdescriptor.html',
 		controller: 'ShowDescriptorCtrl',
 		controllerAs: 'qdCtrl',
 		resolve: {
