@@ -16,7 +16,7 @@ awesomeApp.config(['$stateProvider', '$urlRouterProvider', '$locationProvider', 
 	.state('student', {
 		url: '/student',
 		templateUrl: 'partials/student.html',
-		controller: 'QuizDescriptorCtrl',
+		controller: 'QuizListCtrl',
 		controllerAs: 'quizDescriptors',
 		resolve: {
 			qds: ['Restangular', function(Restangular) {
@@ -33,7 +33,7 @@ awesomeApp.config(['$stateProvider', '$urlRouterProvider', '$locationProvider', 
 	.state('instructor.allquizdescriptors', {
 		url: '/allquizdescriptors',
 		templateUrl: 'partials/instructor.allquizdescriptors.html',
-		controller: 'QuizDescriptorCtrl',
+		controller: 'QuizListCtrl',
 		controllerAs: 'quizDescriptors',
 		resolve: {
 			qds: ['Restangular', function(Restangular) {
@@ -44,7 +44,7 @@ awesomeApp.config(['$stateProvider', '$urlRouterProvider', '$locationProvider', 
 	.state('instructor.myquizdescriptors', {
 		url: '/myquizdescriptors',
 		templateUrl: 'partials/instructor.quizdescriptors.html',
-		controller: 'QuizDescriptorCtrl',
+		controller: 'QuizListCtrl',
 		controllerAs: 'quizDescriptors',
 		resolve: {
 			qds: ['Restangular', 'AuthService', function(Restangular, AuthService) {

@@ -122,7 +122,7 @@ awesomeApp.controller('QuizStartCtrl', [ 'qd', 'SeedGenerator', '$stateParams', 
     return vm;
 }]);
 
-awesomeApp.controller('QuizDescriptorCtrl', [ 'qds', 'Flash', 'Restangular', function(qds, Flash, Restangular) {
+awesomeApp.controller('QuizListCtrl', [ 'qds', 'Flash', 'Restangular', function(qds, Flash, Restangular) {
     var vm = this;
     vm.quizzes = qds;
     vm.quizDescriptorText = "";
