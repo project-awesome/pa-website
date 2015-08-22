@@ -134,7 +134,6 @@ awesomeApp.config(['$stateProvider', '$urlRouterProvider', '$locationProvider', 
 		var requiresAuth = ['instructor.myquizdescriptors', 'usersettings'];
 		var requiresUnauth = ['login'];
 		var authenticated = AuthService.isAuthenticated();
-		//console.log(toState);
 		if (!authenticated) {
 			// redirect user to login page if they try to access user settings page
 			if (requiresAuth.indexOf(toState.name) != -1) {

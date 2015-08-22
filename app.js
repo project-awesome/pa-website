@@ -42,7 +42,6 @@ require('./config/passport.js')(passport);
 // routes ======================================================================
 app.use(function logHttpRequest(req, res, next) {
 	var msg = req.method + " " + req.url;
-	//console.log(req);
 	if (JSON.stringify(req.body) != "{}") {
 		msg = msg + "  params: " + JSON.stringify(req.body);
 	}
