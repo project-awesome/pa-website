@@ -1,8 +1,11 @@
 'use strict';
 
-awesomeApp.controller("ShowDescriptorCtrl", ['qd', function(qd) {
+awesomeApp.controller("ShowDescriptorCtrl", ['qd', 'AuthService', function(qd, AuthService) {
     var vm = this;
     vm.qd = qd;
+    console.log('AuthService.getAwesomeId(): ' + AuthService.getAwesomeId());
+    console.log('qd.id: ' + qd.id);
+    vm.isOwner = AuthService.getAwesomeId() == qd.UserAwesomeId;
     return vm;
 }]);
 

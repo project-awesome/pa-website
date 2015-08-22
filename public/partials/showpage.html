@@ -3,6 +3,7 @@
 	<div class="col-sm-8 col-sm-offset-2">
 
 		<h1><span class="fa" id="qd-title">{{ qdCtrl.qd.descriptor.title }}</span></h1>
+		<a role="button" ng-show="qdCtrl.isOwner" id="qd-settings" href="/quizdescriptor/{{qdCtrl.qd.id}}/settings">Settings</a>
 
 		<hr>
 

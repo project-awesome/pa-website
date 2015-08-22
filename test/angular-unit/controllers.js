@@ -1,4 +1,46 @@
 describe('Angular Controllers', function() {
+	
+	describe('ShowDescriptorCtrl', function() {
+		
+  		var $controller, controller, AuthServiceMock = {}, QDMock = {};
+		beforeEach(function() {
+            AuthServiceMock = {
+				getAwesomeId : function() {
+					return 42;
+				}
+			};
+
+			module('awesomeApp', function ($provide) {
+
+				$provide.value('AuthService', AuthServiceMock);
+				$provide.value('qd', QDMock);
+		    });
+			inject(function(_$controller_) {
+				$controller = _$controller_;
+			});
+			controller = $controller('ShowDescriptorCtrl', { $scope: {} });
+		});
+
+		describe('isOwner', function() {
+			describe('when qd.id == AuthService.getAwseomeId()', function() {
+				before(function() {
+					QDMock = { UserAwesomeId : 42 };
+				});
+				it('should be set to true', function() {
+					expect(controller.isOwner).to.be.true;
+				});
+			});
+			describe('when qd.id != AuthService.getAwseomeId()', function() {
+				before(function() {
+					QDMock = { UserAwesomeId : 100 };
+				});
+				it('should be set to false', function() {
+					expect(controller.isOwner).to.be.false;
+				});
+			});
+	  	});
+	  	
+	});
 
 	describe('InstructorCtrl', function() {
 	    var AuthServiceMock = {};
