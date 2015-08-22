@@ -1,5 +1,10 @@
 var models = require('../../models');
 var projectAwesome = require("project-awesome");
+
+function isValidId(n){
+    return /^\d+$/.test(n);
+}
+    
 module.exports = function(app) {
     
     app.post('/api/qd', function(req, res) {
@@ -27,10 +32,61 @@ module.exports = function(app) {
         
     });
 
-    function isValidId(n){
-        return /^\d+$/.test(n);
-    }
     
+    app.put('/api/qd/:id', function(req, res) {
+        if (!isValidId(req.params.id)) {
+            res.status(400).end();
+            return;
+        }
+        if (!req.isAuthenticated()) {
+            res.status(403).end();
+            return;
+        }
+
+        models.QuizDescriptor.findOne({ where: {id: req.params.id, UserAwesomeId : req.user.awesome_id } }).then(function(qd) {
+            if (!qd) {
+                res.status(403).end();
+                return;
+            }
+            if (typeof req.body !== 'object') {
+                res.status(400).end();
+                return;
+            }
+
+            var updateRequest = {};
+            var emptyRequest = true;
+            if ('hidden' in req.body) {
+                if (req.body.hidden !== true && req.body.hidden !== false) {
+                    res.status(400).end();
+                    return;
+                }
+                updateRequest.hidden = req.body.hidden;
+                emptyRequest = false;
+            }
+            if ('published' in req.body) {
+                if (req.body.published !== true) {
+                    res.status(400).end();
+                    return;
+                }
+                updateRequest.published = true;
+                emptyRequest = false;
+            }
+            if (emptyRequest) {
+                res.status(400).end();
+                return;
+            }
+
+            qd.updateAttributes(updateRequest).then(function(updatedQD) {
+                res.json(updatedQD);
+            }).catch(function(error) {
+                res.status(500).end();
+            })
+
+
+        });
+    });
+    
+
     app.get('/api/qd/:id', function(req, res) {
         if (!isValidId(req.params.id)) {
             res.status(400).end();

@@ -7,12 +7,257 @@ var models = require('../../../models');
 
 var validDescriptor= utils.validDescriptor;
 
-var testUser;
+
 
 describe('QuizDescriptor API', function() {
 
-    describe('POST /api/qd', function() {
+    describe('PUT /api/qd/:id', function() {
+        describe('unauthenticated user', function() {
+            var testUser, qd;
+            before(function(done) {
+                utils.resetEnvironment(app).then(function() {
+                    models.QuizDescriptor.create({descriptor: utils.getSampleQuizDescriptor("Some QD Title")}).then(function(res) {
+                        qd = res;
+                        done();
+                    });
+                });
+            });
+            it('should respond with error 403', function(done) {
+                request(app)
+                .put('/api/qd/'+qd.id)
+                .send({hidden: false})
+                .expect(403)
+                .end(function(err, res) {
+                    if (err) return done(err);
+                    done();
+                });
+            });
+            it('should respond with error 403 even when its a bad request', function(done) {
+                request(app)
+                .put('/api/qd/'+qd.id)
+                .send({ descriptor: { quiz : null } })
+                .expect(403)
+                .end(function(err, res) {
+                    if (err) return done(err);
+                    done();
+                });
+            });
+        });
+        describe('Authenticated User', function() {
+            var testUser, myQD, notMyQD;
+            before(function(done) {
+                utils.resetEnvironment(app).then(function() {
+                    utils.insertQuizDescriptor(models, 'Example Quiz Descriptor Title').then(function(res1) {
+                        notMyQD = res1;
+                        utils.authenticateTestUser().then(function(user) {
+                            testUser = user;
+                            testUser.createQuizDescriptor( { descriptor: utils.getSampleQuizDescriptor("Test User's QD") } ).then(function(res2) {
+                                myQD = res2;
+                                done();
+                            });
+                        });
+                    });
+                });
+            });
+            after(function() {
+                utils.unauthenticateTestUser();
+            });
 
+            describe('when request is made for qd that doesnt belong to authenticated user', function() {
+                it('should respond with error 403', function(done) {
+                    request(app)
+                    .put('/api/qd/'+notMyQD.id)
+                    .send({hidden: false})
+                    .expect(403)
+                    .end(function(err, res) {
+                        if (err) return done(err);
+                        done();
+                    });
+                });
+                it('should respond with error 403 even when its a bad request', function(done) {
+                    request(app)
+                    .put('/api/qd/'+notMyQD.id)
+                    .send({ descriptor: { quiz : null } })
+                    .expect(403)
+                    .end(function(err, res) {
+                        if (err) return done(err);
+                        done();
+                    });
+                });
+            });
+
+            describe('when user makes a request for a qd that does not exist', function() {
+                it('should respond with error 404', function(done) {
+                    request(app)
+                    .put('/api/qd/'+(myQD.id+10000))
+                    .send({hidden: false})
+                    .expect(403)
+                    .end(function(err, res) {
+                        if (err) return done(err);
+                        done();
+                    });
+                });
+                it('should respond with error 404 even when its a bad request', function(done) {
+                    request(app)
+                    .put('/api/qd/'+(myQD.id+10000))
+                    .send({ descriptor: { quiz : null } })
+                    .expect(403)
+                    .end(function(err, res) {
+                        if (err) return done(err);
+                        done();
+                    });
+                });
+            });
+
+            describe('when user is the owner of the given qd', function() {
+                describe('non object body', function() {
+                    it('should respond with error 400', function(done) {
+                        request(app)
+                        .put('/api/qd/'+myQD.id)
+                        .send("ayy lmao")
+                        .expect(400)
+                        .end(function(err, res) {
+                            if (err) return done(err);
+                            done();
+                        });
+                    });
+                });
+                describe('empty body', function() {
+                    it('should respond with error 400', function(done) {
+                        request(app)
+                        .put('/api/qd/'+myQD.id)
+                        .send({})
+                        .expect(400)
+                        .end(function(err, res) {
+                            if (err) return done(err);
+                            done();
+                        });
+                    });
+                });
+
+                describe('updating published', function() {
+                    describe('when setting published to false', function() {
+                        it('should respond with error 400', function(done) {
+                            request(app)
+                            .put('/api/qd/'+myQD.id)
+                            .send({published:false})
+                            .expect(400)
+                            .end(function(err, res) {
+                                if (err) return done(err);
+                                done();
+                            });
+                        });
+                    });
+                    describe('when setting published to true', function() {
+                        it('should respond with 200 and body with qd where qd.published == true', function(done) {
+                            request(app)
+                            .put('/api/qd/'+myQD.id)
+                            .send({published:true})
+                            .expect(200)
+                            .end(function(err, res) {
+                                if (err) return done(err);
+                                expect(res.body.published).to.equal(true);
+                                done();
+                            });
+                        });
+                    });
+                    describe('when published is not a boolean', function() {
+                        it('should respond with error 400', function(done) {
+                            request(app)
+                            .put('/api/qd/'+myQD.id)
+                            .send({published:'true'})
+                            .expect(400)
+                            .end(function(err, res) {
+                                if (err) return done(err);
+                                done();
+                            });
+                        });
+                    });
+                });
+                describe('updating hidden', function() {
+                    describe('when setting to false', function() {
+                        it('should respond with 200 and with body where qd.hidden == false', function(done) {
+                            request(app)
+                            .put('/api/qd/'+myQD.id)
+                            .send({hidden:false})
+                            .expect(200)
+                            .end(function(err, res) {
+                                if (err) return done(err);
+                                expect(res.body.hidden).to.be.false;
+                                done();
+                            });
+                        });
+                    });
+                    describe('when setting to true', function() {
+                        it('should respond with 200 and with body where qd.hidden == true', function(done) {
+                            request(app)
+                            .put('/api/qd/'+myQD.id)
+                            .send({hidden:true})
+                            .expect(200)
+                            .end(function(err, res) {
+                                if (err) return done(err);
+                                expect(res.body.hidden).to.be.true;
+                                done();
+                            });
+                        });
+                    });
+                    describe('when published is not a boolean', function() {
+                        it('should respond with error 400', function(done) {
+                            request(app)
+                            .put('/api/qd/'+myQD.id)
+                            .send({hidden:'true'})
+                            .expect(400)
+                            .end(function(err, res) {
+                                if (err) return done(err);
+                                done();
+                            });
+                        });
+                    });
+                });
+            });
+            /*
+            it('should return 400 Bad Request if missing descriptor parameter', function(done) {
+                request(app)
+                .post('/api/qd')
+                .expect(400)
+                .end(function(err, res) {
+                    if (err) return done(err);
+                    done();
+                });
+            });
+
+            it('should respond with 400 Bad Request if the descriptor syntax is invalid', function(done) {
+                request(app)
+                .post('/api/qd')
+                .send({descriptor: '{something: "blah"}'})
+                .expect(400)
+                .end(function(err, res) {
+                    if (err) return done(err);
+                    done();
+                });
+            });
+
+            it('should give status 200 and return json { descriptor: {...} } if successful', function(done) {
+
+                request(app)
+                .post('/api/qd')
+                .send({descriptor: validDescriptor})
+                .expect(200)
+                .end(function(err, res) {
+                    if (err) return done(err);
+                    expect(res.body.descriptor).to.eql(validDescriptor);
+                    expect(res.body.id).to.be.a('number');
+                    done();
+                });
+            });
+            */
+
+        });
+
+    });
+
+    describe('POST /api/qd', function() {
+        var testUser;
         describe('Unauthenticated User', function() {
             before(function(done) {
                 utils.resetEnvironment(app).then(function() {
@@ -95,7 +340,7 @@ describe('QuizDescriptor API', function() {
     });
 
     describe('GET /api/qd/:id', function() {
-
+        var testUser;
         describe('Unauthenticated User', function() {
             before(function(done) {
                 utils.resetEnvironment(app).then(function() {
@@ -195,6 +440,7 @@ describe('QuizDescriptor API', function() {
 
 
     describe('GET /api/qd', function() {
+        var testUser;
         describe('when 4 qd in the db have (published hidden) values set to [(t,t), (f,t), (t,f), (f,f)]', function() {
             before(function(done) {
                 utils.resetEnvironment(app).then(function() {
