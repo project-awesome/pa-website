@@ -1,5 +1,4 @@
 #!/usr/bin/env bash
-
 mocha test/node-unit/env_vars.js && \
 mocha test/node-unit/models/*.js && \
 mocha test/node-unit/api/*.js && \

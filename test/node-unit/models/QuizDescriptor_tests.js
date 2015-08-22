@@ -26,6 +26,44 @@ describe('QuizDescriptor', function() {
     });
   });
 
+  describe('published property', function() {
+    describe('default value when unspecified', function() {
+      var res;
+      before(function(done) {
+        models.QuizDescriptor.create({descriptor: validDescriptor}).then(function(qd) {
+          res = qd;
+          done();
+        });
+      });
+      after(function(done) {
+        res.destroy().then(function() {
+          done();
+        });
+      });
+      it('should be set to false', function(done) {
+        expect(res.hidden).to.be.false;
+        done();
+      });
+    });
+    describe('when specified as true', function() {
+      var res;
+      before(function(done) {
+        models.QuizDescriptor.create({descriptor: validDescriptor, published: true}).then(function(qd) {
+          res = qd;
+          done();
+        });
+      });
+      after(function(done) {
+        res.destroy().then(function() {
+          done();
+        });
+      });
+      it('should be set to true', function(done) {
+        expect(res.published).to.be.true;
+        done();
+      });
+    });
+  });
   describe('hidden property', function() {
     describe('default value when unspecified', function() {
       var res;
