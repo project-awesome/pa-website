@@ -12,14 +12,12 @@ describe('/quiz/:id', function() {
 	var qd;
 
     before(function(done) {
-        models.sequelize.sync({ force: true }).then(function () {
-            server = app.listen(app.get('port'), function() {
-	            models.sequelize.sync({ force: true }).then(function () {
-	                utils.insertQuizDescriptor(models, 'Example Quiz Descriptor Title').then(function(res) {
-	                    qd = res;
-	                    done();
-	                });
-	            });
+        server = app.listen(app.get('port'), function() {
+            models.sequelize.sync({ force: true }).then(function () {
+                utils.insertQuizDescriptor(models, 'Example Quiz Descriptor Title').then(function(res) {
+                    qd = res;
+                    done();
+                });
             });
         });
     });
