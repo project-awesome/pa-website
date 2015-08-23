@@ -6,7 +6,7 @@
 
 	<div>
 		<form name="qdForm">
-<!-- 
+			<!-- 
 			<div class="form-group" ng-class="{'has-error': qdForm.title.$error.required }">
 				<label>Title</label>
 				<input name="title" type="text" class="form-control" ng-model="qdCtrl.qd.descriptor.title" placeholder="Title" required>
@@ -19,19 +19,25 @@
 				</div>
 			    <div class="btn-group">
 			        <label class="btn btn-primary" ng-model="qdCtrl.qd.hidden" btn-radio="true">True</label>
-			        <label class="btn btn-primary" ng-model="qdCtrl.qd.hidden" btn-radio="false"v>False</label>
-			    </div>
-			    <div>
-			    	{{ qdCtrl.qd.hidden }}
-			    </div>
-			    <div>
-			    	<span>Publish: </span>{{ qdCtrl.qd.published }}
+			        <label class="btn btn-primary" ng-model="qdCtrl.qd.hidden" btn-radio="false">False</label>
 			    </div>
 			</div>
 			<div>
 				<br>
 				<br>
-				<button ng-click="qdCtrl.publishQuiz()" type="submit" class="btn btn-success btn-lg">Update Settings</button>
+				<div>
+					<button ng-disabled="qdCtrl.waitingForResponse || qdForm.$pristine" ng-click="qdForm.$setPristine(); qdCtrl.saveSettings();" type="submit" class="btn btn-success btn-lg">
+						Save Changes
+					</button>
+				</div>
+				<div>
+					<br>
+				</div>
+				<div ng-hide="qdCtrl.qd.published">
+					<button ng-disabled="qdCtrl.waitingForResponse || !qdForm.$pristine" ng-click="qdForm.$setPristine(); qdCtrl.publishQuiz();" type="submit" class="btn btn-danger btn-lg">
+						Publish Quiz
+					</button>
+				</div>
 			</div>
 		</form>
 

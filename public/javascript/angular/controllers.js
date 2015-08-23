@@ -1,9 +1,43 @@
 'use strict';
 
-awesomeApp.controller("QuizDescriptorCtrl", ['qd', 'AuthService', function(qd, AuthService) {
+awesomeApp.controller("QuizDescriptorCtrl", ['qd', 'AuthService', 'Flash', function(qd, AuthService, Flash) {
     var vm = this;
     vm.qd = qd;
     vm.isOwner = AuthService.getAwesomeId() == qd.UserAwesomeId;
+    vm.waitingForResponse = false;
+
+    vm.saveSettings = function() {
+        vm.waitingForResponse = true;
+        vm.qd.customPUT({ hidden: vm.qd.hidden }).then(function(newQD) {
+            vm.waitingForResponse = false;
+            vm.qd = newQD;
+            Flash.create('success', '<strong> Quiz Descriptor Saved:</strong>  id = ' + qd.id + '.', 'custom-class');
+        }, function() {
+            vm.waitingForResponse = false;
+            Flash.create('warning', '<strong> Not Saved:</strong>  Something went wrong.', 'custom-class');
+        });
+    }
+
+    vm.publishQuiz = function() {
+        vm.waitingForResponse = true;
+        vm.qd.customPUT({published:true}).then(function(newQD) {
+            vm.waitingForResponse = false;
+            vm.qd = newQD;
+            Flash.create('success', '<strong> Quiz Published:</strong>  Your quiz is now published!', 'custom-class');
+        }, function() {
+            vm.waitingForResponse = false;
+            Flash.create('warning', '<strong> Not Published:</strong>  Something went wrong.', 'custom-class');
+        });
+    }
+    
+
+    return vm;
+    
+}]);
+
+awesomeApp.controller("NavigationCtrl", ['tabs', function(tabs) {
+    var vm = this;
+    vm.tabs = tabs;
     return vm;
 }]);
 

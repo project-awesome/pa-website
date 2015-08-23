@@ -1,45 +1,151 @@
 describe('Angular Controllers', function() {
-	
 	describe('QuizDescriptorCtrl', function() {
-		
-  		var $controller, controller, AuthServiceMock = {}, QDMock = {};
+		describe('initialize', function() {
+	  		var $controller, controller, AuthServiceMock = {}, QDMock = {};
+			beforeEach(function() {
+	            AuthServiceMock = {
+					getAwesomeId : function() {
+						return 42;
+					}
+				};
+				module('awesomeApp', function ($provide) {
+
+					$provide.value('AuthService', AuthServiceMock);
+					$provide.value('qd', QDMock);
+			    });
+				inject(function(_$controller_) {
+					$controller = _$controller_;
+				});
+				controller = $controller('QuizDescriptorCtrl', { $scope: {} });
+			});
+			describe('isOwner', function() {
+				describe('when qd.id == AuthService.getAwseomeId()', function() {
+					before(function() {
+						QDMock = { UserAwesomeId : 42 };
+					});
+					it('should be set to true', function() {
+						expect(controller.isOwner).to.be.true;
+					});
+				});
+				describe('when qd.id != AuthService.getAwseomeId()', function() {
+					before(function() {
+						QDMock = { UserAwesomeId : 100 };
+					});
+					it('should be set to false', function() {
+						expect(controller.isOwner).to.be.false;
+					});
+				});
+		  	});
+			describe('waitingForResponse', function() {
+				describe('should be set to false', function() {
+					it('should be set to true', function() {
+						expect(controller.waitingForResponse).to.be.false;
+					});
+				});
+		  	});
+		});
+	  	describe('API requests', function() {
+	  		var qd = {}
+	  		var AuthServiceMock = {}, QDMock = {};
+	  		var $httpBackend, requestHandler, requestResponse = {};
+	  		var Restangular;
+	  		var awesome_id, qd_id;
+			beforeEach(function() {
+				awesome_id = 42;
+				qd_id = 10;
+				requestResponse = { 'my' : 'response' };
+				QDMock = { UserAwesomeId : awesome_id, id: qd_id };
+				AuthServiceMock.getAwesomeId = function() { return awesome_id };
+				AuthServiceMock.isAuthenticated = function() { return true };
+				module('awesomeApp', function ($provide, $urlRouterProvider) {
+					$urlRouterProvider.deferIntercept();
+					$provide.value('AuthService', AuthServiceMock);
+					$provide.value('qd', QDMock);
+			    });
+			});
+	  		beforeEach(inject(function($injector) {
+				$httpBackend = $injector.get('$httpBackend');
+				Restangular = $injector.get('Restangular');
+				requestHandler = $httpBackend.when('PUT', '/api/qd/'+qd_id).respond(requestResponse);
+				$httpBackend.when('GET', 'partials/index.html').respond({});
+				$rootScope = $injector.get('$rootScope');
+				var $controller = $injector.get('$controller');
+				createController = function() {
+					var controller = $controller('QuizDescriptorCtrl', {'$scope' : $rootScope });
+					controller.qd = Restangular.one('qd',qd_id)
+					return controller;
+				};
+			}));
+			afterEach(function() {
+				$httpBackend.verifyNoOutstandingExpectation();
+				$httpBackend.verifyNoOutstandingRequest();
+			});
+		  	describe('saveSettings()', function() {
+		  		it('should make a put request to /api/qd/:id', function() {
+     				var controller = createController();
+		  			$httpBackend.expectPUT('/api/qd/'+controller.qd.id);
+     				controller.saveSettings();
+     				$httpBackend.flush();
+		  		});
+		  		it('should have set qd appropriately', function() {
+     				var controller = createController();
+		  			$httpBackend.expectPUT('/api/qd/'+controller.qd.id);
+     				controller.saveSettings();
+     				$httpBackend.flush();
+     				expect(controller.qd.my).to.equal(requestResponse.my);
+		  		});
+		  		it('should set waitingForResponse to true, and back to false when the response comes', function() {
+     				var controller = createController();
+		  			$httpBackend.expectPUT('/api/qd/'+controller.qd.id);
+     				controller.saveSettings();
+     				expect(controller.waitingForResponse).to.be.true;
+     				$httpBackend.flush();
+     				expect(controller.waitingForResponse).to.be.false;
+		  		});
+		  	});
+		  	describe('publishQuiz()', function() {
+		  		it('should make a put request to /api/qd/:id', function() {
+     				var controller = createController();
+		  			$httpBackend.expectPUT('/api/qd/'+controller.qd.id);
+     				controller.publishQuiz();
+     				$httpBackend.flush();
+		  		});
+		  		it('should have set qd appropriately', function() {
+     				var controller = createController();
+		  			$httpBackend.expectPUT('/api/qd/'+controller.qd.id);
+     				controller.publishQuiz();
+     				$httpBackend.flush();
+     				expect(controller.qd.my).to.equal(requestResponse.my);
+		  		});
+		  		it('should set waitingForResponse to true, and back to false when the response comes', function() {
+     				var controller = createController();
+		  			$httpBackend.expectPUT('/api/qd/'+controller.qd.id);
+     				controller.publishQuiz();
+     				expect(controller.waitingForResponse).to.be.true;
+     				$httpBackend.flush();
+     				expect(controller.waitingForResponse).to.be.false;
+		  		});
+		  	});
+	  	});
+	});
+
+	describe('NavigationCtrl', function() {
+  		var $controller, controller, TabsMock;
 		beforeEach(function() {
-            AuthServiceMock = {
-				getAwesomeId : function() {
-					return 42;
-				}
-			};
-
+            TabsMock = "something";
 			module('awesomeApp', function ($provide) {
-
-				$provide.value('AuthService', AuthServiceMock);
-				$provide.value('qd', QDMock);
+				$provide.value('tabs', TabsMock);
 		    });
 			inject(function(_$controller_) {
 				$controller = _$controller_;
 			});
-			controller = $controller('QuizDescriptorCtrl', { $scope: {} });
+			controller = $controller('NavigationCtrl', { $scope: {} });
 		});
-
-		describe('isOwner', function() {
-			describe('when qd.id == AuthService.getAwseomeId()', function() {
-				before(function() {
-					QDMock = { UserAwesomeId : 42 };
-				});
-				it('should be set to true', function() {
-					expect(controller.isOwner).to.be.true;
-				});
+		describe('tabs', function() {
+			it('should be set to the provided tabs', function() {
+				expect(controller.tabs).to.equal(TabsMock);
 			});
-			describe('when qd.id != AuthService.getAwseomeId()', function() {
-				before(function() {
-					QDMock = { UserAwesomeId : 100 };
-				});
-				it('should be set to false', function() {
-					expect(controller.isOwner).to.be.false;
-				});
-			});
-	  	});
-	  	
+		});
 	});
 
 	describe('InstructorCtrl', function() {

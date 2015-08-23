@@ -1,41 +1,15 @@
 <div class="container">
+	<div class="row">
 
-	<div class="col-sm-8 col-sm-offset-2">
+			<div class="col-md-3 col-sm-3">
 
-		<h1>Quiz Settings</h1>
-
-		<hr>
-
-		<div>
-			<form name="qdForm">
-				<div class="form-group" ng-class="{'has-error': qdForm.title.$error.required }">
-					<label>Title</label>
-					<input name="title" type="text" class="form-control" ng-model="qdCtrl.qd.descriptor.title" placeholder="Title" required>
-					<span class="help-block" ng-class="{ 'invisible': !qdForm.title.$error.required }">Your quiz needs a title.</span>
+				<div class="list-group">
+					<a ng-repeat="tab in navCtrl.tabs" class="list-group-item" ui-sref-active="active" ui-sref="{{ tab.state }}">{{ tab.label }}</a>
 				</div>
-				<div class="form-group">
-					<div>
-						<label>Hidden</label>
-					</div>
-				    <div class="btn-group">
-				        <label class="btn btn-primary" ng-model="qdCtrl.qd.hidden" btn-radio="true" uncheckable>True</label>
-				        <label class="btn btn-primary" ng-model="qdCtrl.qd.hidden" btn-radio="false" uncheckable>False</label>
-				    </div>
-				    <div>
-				    	{{ qdCtrl.qd.hidden }}
-				    </div>
-				</div>
-				<div>
-					<br>
-					<br>
-					<button ng-click="" type="submit" class="btn btn-success btn-lg">Update Settings</button>
-				</div>
-			</form>
+			</div>
 
-
-
-		</div>
-
+			<div class="col-md-9 col-sm-9">
+				<div ui-view></div>
+			</div>
 	</div>
-	
 </div>
