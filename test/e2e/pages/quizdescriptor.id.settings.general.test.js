@@ -8,7 +8,7 @@ var utils = require('../../utils');
 var server;
 
 
-describe('/quizdescriptor/:id/settings', function() {
+describe('/quizdescriptor/:id/settings/general', function() {
     before(function(done) {
         server = app.listen(app.get('port'), function() {
             utils.resetEnvironment(app).then(function() {
@@ -36,14 +36,14 @@ describe('/quizdescriptor/:id/settings', function() {
         });
         describe('when the quiz id does not exist', function() {
             it('should redirect the user to the login page', function(done) {
-                browser.get('/quizdescriptor/'+(qd.id+1)+'/settings');
+                browser.get('/quizdescriptor/'+(qd.id+1)+'/settings/general');
                 expect(browser.getCurrentUrl()).to.eventually.include('/login');
                 done();
             });
         });
         describe('when the quiz id does exist', function() {
             it('should redirect the user to the login page', function(done) {
-                browser.get('/quizdescriptor/'+(qd.id)+'/settings');
+                browser.get('/quizdescriptor/'+(qd.id)+'/settings/general');
                 expect(browser.getCurrentUrl()).to.eventually.include('/login');
                 done();
             });
@@ -69,11 +69,11 @@ describe('/quizdescriptor/:id/settings', function() {
 
         describe('when the does not belong to the authenticated user', function() {
             before(function(done) {
-                browser.get('/quizdescriptor/'+notMyQD.id+'/settings');
+                browser.get('/quizdescriptor/'+notMyQD.id+'/settings/general');
                 done();
             });
             it('should render the 404 page', function(done) {
-                expect(browser.getCurrentUrl()).to.eventually.include('/quizdescriptor/'+notMyQD.id+'/settings');
+                expect(browser.getCurrentUrl()).to.eventually.include('/quizdescriptor/'+notMyQD.id+'/settings/general');
                 browser.findElement(by.id('fourOFour')).then(function() {
                     done();
                 });
@@ -81,19 +81,12 @@ describe('/quizdescriptor/:id/settings', function() {
         });
         describe('when the quiz belongs to the authenticated user', function() {
             before(function(done) {
-                browser.get('/quizdescriptor/'+myQD.id+'/settings');
+                browser.get('/quizdescriptor/'+myQD.id+'/settings/general');
                 done();
             });
-            it('should successfully navigate to /quizdescriptor/:id/settings', function() {
-                expect(browser.getCurrentUrl()).to.eventually.include('/quizdescriptor/'+myQD.id+'/settings');
+            it('should successfully navigate to /quizdescriptor/:id/settings/general', function() {
+                expect(browser.getCurrentUrl()).to.eventually.include('/quizdescriptor/'+myQD.id+'/settings/general');
             });
-
         });
     });
 });
-
-
-
-
-
-
