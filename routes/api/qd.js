@@ -42,7 +42,6 @@ module.exports = function(app) {
             res.status(403).end();
             return;
         }
-
         models.QuizDescriptor.findOne({ where: {id: req.params.id, UserAwesomeId : req.user.awesome_id } }).then(function(qd) {
             if (!qd) {
                 res.status(403).end();
@@ -52,7 +51,6 @@ module.exports = function(app) {
                 res.status(400).end();
                 return;
             }
-
             var updateRequest = {};
             var emptyRequest = true;
             if ('hidden' in req.body) {
@@ -64,11 +62,15 @@ module.exports = function(app) {
                 emptyRequest = false;
             }
             if ('published' in req.body) {
-                if (req.body.published !== true) {
+                if (req.body.published !== true && req.body.published !== false) {
                     res.status(400).end();
                     return;
                 }
-                updateRequest.published = true;
+                if (req.body.published === false && qd.published === true) {
+                    res.status(400).end();
+                    return;
+                }
+                updateRequest.published = req.body.published;
                 emptyRequest = false;
             }
             if ('descriptor' in req.body) {

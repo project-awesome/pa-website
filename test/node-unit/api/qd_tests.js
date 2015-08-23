@@ -193,7 +193,17 @@ describe('QuizDescriptor API', function() {
                     });
                 });
                 describe('updating published', function() {
-                    describe('when setting published to false', function() {
+                    describe('when setting published to false when it is true', function() {
+                        before(function(done) {
+                            myQD.updateAttributes({published:true}).then(function() {
+                                done();
+                            });
+                        });
+                        after(function(done) {
+                            myQD.updateAttributes({published:false}).then(function() {
+                                done();
+                            });
+                        });
                         it('should respond with error 400', function(done) {
                             request(app)
                             .put('/api/qd/'+myQD.id)
