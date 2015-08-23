@@ -35,6 +35,7 @@ module.exports = function(app) {
     
     app.put('/api/qd/:id', function(req, res) {
         if (!isValidId(req.params.id)) {
+            console.log("Invalid quiz descriptor id.");
             res.status(400).end();
             return;
         }
@@ -48,6 +49,7 @@ module.exports = function(app) {
                 return;
             }
             if (typeof req.body !== 'object') {
+                console.log("req.body is not an object.");
                 res.status(400).end();
                 return;
             }
@@ -55,6 +57,7 @@ module.exports = function(app) {
             var emptyRequest = true;
             if ('hidden' in req.body) {
                 if (req.body.hidden !== true && req.body.hidden !== false) {
+                    console.log("Hidden must be a boolean.");
                     res.status(400).end();
                     return;
                 }
@@ -63,10 +66,12 @@ module.exports = function(app) {
             }
             if ('published' in req.body) {
                 if (req.body.published !== true && req.body.published !== false) {
+                    console.log("Published must be a boolean.");
                     res.status(400).end();
                     return;
                 }
                 if (req.body.published === false && qd.published === true) {
+                    console.log("Trying to unpublished a published quiz.");
                     res.status(400).end();
                     return;
                 }
@@ -75,10 +80,12 @@ module.exports = function(app) {
             }
             if ('descriptor' in req.body) {
                 if (projectAwesome.isValidQuizDescriptor(req.body.descriptor) !== true) {
+                    console.log("Quiz descriptor is not valid.");
                     res.status(400).end();
                     return;
                 }
                 if (qd.published === true) {
+                    console.log("Trying to edit a published quiz.");
                     res.status(400).end();
                     return;
                 }
