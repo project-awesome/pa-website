@@ -61,7 +61,35 @@ module.exports.validDescriptor = {
     "quiz": [
     	{
 		    "question": "binHexOctDec",
-		    "repeat": 2,
+		    "repeat": 4,
+		    "parameters": {
+		    	"conversions": [
+		    		{ 
+		    			fromRad: 2, 
+		    			toRad: 8,
+		    			minVal: 1,
+		    			maxVal: 1024,
+		    		},
+		    		{ 
+		    			fromRad: 8, 
+		    			toRad: 2,
+		    			minVal: 1,
+		    			maxVal: 1024,
+		    		},
+		    		{ 
+		    			fromRad: 2, 
+		    			toRad: 16,
+		    			minVal: 1,
+		    			maxVal: 1024,
+		    		},
+		    		{ 
+		    			fromRad: 16, 
+		    			toRad: 2,
+		    			minVal: 1,
+		    			maxVal: 1024,
+		    		}
+		    	]
+		    }
 		},
     	{
 		    "question": "changeOfBase",
