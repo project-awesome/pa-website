@@ -44,15 +44,6 @@ describe('/quizdescriptor/:id/settings/* navigation', function() {
             });
         });
 
-        it('should navigate the /publish page and the Publish nav item should be active', function(done) {
-            var publishLink = element(by.linkText('Publish'));
-            publishLink.click().then(function() {
-                expect(browser.getCurrentUrl()).to.eventually.include('/publish');
-                expect(publishLink.getAttribute('class')).to.eventually.include('active');
-                done();
-            });
-        });
-
         it('should navigate the /general page and the General nav item should be active', function(done) {
             var generalLink = element(by.linkText('General'));
             generalLink.click().then(function() {

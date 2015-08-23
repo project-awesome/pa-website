@@ -120,8 +120,7 @@ awesomeApp.config(['$stateProvider', '$urlRouterProvider', '$locationProvider', 
         	tabs: function() {
         		return [
 			        { label: "General", state: "quizsettings.general"},
-			        { label: "Questions", state: "quizsettings.questions"},
-			        { label: "Publish", state: "quizsettings.publish"}
+			        { label: "Questions", state: "quizsettings.questions"}
 			    ];
         	}
         }
@@ -145,22 +144,6 @@ awesomeApp.config(['$stateProvider', '$urlRouterProvider', '$locationProvider', 
 	.state('quizsettings.questions', {
 		url: '/questions',
 		templateUrl: 'partials/quizsettings.questions.html',
-		controller: 'QuizDescriptorCtrl',
-		controllerAs: 'qdCtrl',
-		resolve: {
-			qd: ['Restangular', 'AuthService', '$stateParams', function(Restangular, AuthService, $stateParams) {
-				return Restangular.one('qd', $stateParams.id).get().then(function(qd) {
-					if (qd.UserAwesomeId != AuthService.getAwesomeId())
-						throw { status: 404 };
-					else
-						return qd;
-				});
-			}]
-		}
-	})
-	.state('quizsettings.publish', {
-		url: '/publish',
-		templateUrl: 'partials/quizsettings.publish.html',
 		controller: 'QuizDescriptorCtrl',
 		controllerAs: 'qdCtrl',
 		resolve: {
