@@ -24,7 +24,7 @@
     "request": "^2.58.0",
     "sequelize": "^3.3.2",
     "project-awesome": "1.2.0",
-    "underscore": "^1.8.3"
+    "underscore": "^1.8.3",
     "serve-favicon": "^2.3.0"
   },
   "engines": {
