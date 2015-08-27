@@ -53,7 +53,7 @@ awesomeApp.factory('PAQuestions', [function() {
             schema: {
                 type: "object",
                 properties: {
-                    repeat: { type: "integer", title: "Repeat", minimum: 1 },
+                    repeat: { type: "integer", title: "Repeat", minimum: 1, required: true },
                     parameters: { 
                         type: "object",
                         title: "Parameters",
@@ -61,15 +61,15 @@ awesomeApp.factory('PAQuestions', [function() {
                             spaceBinary: { type: "boolean", title: "Space Binary" },
                             conversions: {
                                 type: "array",
+                                title: "Conversions",
                                 items: {
                                     type: "object",
                                     properties: {
-                                        fromRad: { type: "integer", title: "From Radix", minimum: 2, maximum: 36 },
-                                        toRad: { type: "integer", title: "To Radix", minimum: 2, maximum: 36 },
-                                        minVal: { type: "integer", title: "Minium Value", minimum: 0 },
-                                        maxVal: { type: "integer", title: "Minium Value", minimum: 0 }
+                                        fromRad: { type: "integer", title: "From Radix", minimum: 2, maximum: 36, required:true },
+                                        toRad: { type: "integer", title: "To Radix", minimum: 2, maximum: 36, required:true },
+                                        minVal: { type: "integer", title: "Minium Value", minimum: 0, required:true },
+                                        maxVal: { type: "integer", title: "Maximum Value", minimum: 0, required:true }
                                     }
-
                                 }
                             }
                         }
@@ -91,10 +91,12 @@ awesomeApp.factory('PAQuestions', [function() {
             schema: {
                 type: "object",
                 properties: {
-                    repeat: { type: "integer", title: "Repeat", minimum: 1 },
+                    repeat: { type: "integer", title: "Repeat", minimum: 1, required: true },
                 }
             },
-            form: ["*"],
+            form: [
+                "*"
+            ],
             template: {
                 repeat: 1,
                 question: 'changeOfBase'

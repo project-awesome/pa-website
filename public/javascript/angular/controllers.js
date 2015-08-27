@@ -55,12 +55,12 @@ awesomeApp.controller("QuizDescriptorCtrl", ['qd', 'AuthService', 'Flash', '$mod
             size: 'lg',
             resolve: {
                 question: function () {
-                    return angular.copy(qd.descriptor.quiz[i]);
+                    return angular.copy(vm.qd.descriptor.quiz[i]);
                 }
             }
         });
         modalInstance.result.then(function (question) {
-            qd.descriptor.quiz[i] = question;
+            vm.qd.descriptor.quiz[i] = question;
         }, function () {
             //$log.info('Modal dismissed at: ' + new Date());
         });
@@ -72,16 +72,19 @@ awesomeApp.controller("QuizDescriptorCtrl", ['qd', 'AuthService', 'Flash', '$mod
 }]);
 
 
-awesomeApp.controller("QuestionEditCtrl", ['question', '$modalInstance', 'PAQuestions', function(question, $modalInstance, PAQuestions) {
+awesomeApp.controller("QuestionEditCtrl", ['question', '$modalInstance', 'PAQuestions', '$scope', function(question, $modalInstance, PAQuestions, $scope) {
 
     var vm = this;
-    vm.options = { };
+    vm.options = { supressPropertyTitles: true, formDefaults: { startEmpty: true, feedback: false, style: { add: 'btn-primary' } } };
     vm.model = question;
     vm.schema = PAQuestions.getSchemaDefinition(vm.model.question);
     vm.form = PAQuestions.getFormDefinition(vm.model.question);
 
-    vm.done = function () {
-        $modalInstance.close(vm.model);
+    vm.done = function (form) {
+        $scope.$broadcast('schemaFormValidate');
+        if (form.$valid) {
+            $modalInstance.close(vm.model);
+        }
     };
 
     vm.cancel = function () {

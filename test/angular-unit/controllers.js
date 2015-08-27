@@ -203,7 +203,7 @@ describe('Angular Controllers', function() {
 			ModalInstanceMock = { close : function(val) { }, dismiss: function(val) { } };
 			PAQuestionsMock = { 
 				getSchemaDefinition : function() { return { mock: 'schemaJSON' } }, 
-				getFormDefinition : function() { return { mock: 'formJSON' } } 
+				getFormDefinition : function() { return { mock: 'formJSON' } }
 			};
 			module('awesomeApp', function ($provide) {
 				$provide.value('question', QuestionMock);
@@ -214,7 +214,7 @@ describe('Angular Controllers', function() {
   		beforeEach(inject(function($injector) {
 			var $controller = $injector.get('$controller');
 			createController = function() {
-				var controller = $controller('QuestionEditCtrl', {'$scope' : {} });
+				var controller = $controller('QuestionEditCtrl', {'$scope' : { $broadcast: function(val) {} } });
 				return controller;
 			};
 
@@ -256,12 +256,23 @@ describe('Angular Controllers', function() {
 			afterEach(function() {
 				spy.restore();
 			});
-			it('should call $modalInstance.close() and pass the edited model', function() {
-				var ctrl = createController();
-				ctrl.model = { question : 'someQuestionType', descriptor : "newObj" };
-				ctrl.done();
-				expect(spy.calledOnce).to.be.true;
-				expect(spy.args[0][0]).to.eql({ question : 'someQuestionType', descriptor : "newObj" });
+
+			describe('when form is valid', function() {
+				it('should call $modalInstance.close() and pass the edited model', function() {
+					var ctrl = createController();
+					ctrl.model = { question : 'someQuestionType', descriptor : "newObj" };
+					ctrl.done({ $valid: true });
+					expect(spy.calledOnce).to.be.true;
+					expect(spy.args[0][0]).to.eql({ question : 'someQuestionType', descriptor : "newObj" });
+				});
+			});
+			describe('when form is not valid', function() {
+				it('should not call $modalInstance.close()', function() {
+					var ctrl = createController();
+					ctrl.model = { question : 'someQuestionType', descriptor : "newObj" };
+					ctrl.done({ $valid: false });
+					expect(spy.called).to.be.false;
+				});
 			});
 		});
 		describe('ctrl.cancel()', function() {
