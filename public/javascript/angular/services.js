@@ -78,7 +78,7 @@ awesomeApp.factory('PAQuestions', [function() {
             },
             form: ["*"],
             template: {
-                repeat: { type: "integer", title: "Repeat", minimum: 1 },
+                repeat: 1,
                 question: 'binHexOctDec',
                 parameters: {
                     spaceBinary: true,
@@ -91,7 +91,7 @@ awesomeApp.factory('PAQuestions', [function() {
             schema: {
                 type: "object",
                 properties: {
-                    repeat: { type: "integer", title: "Repeat" }
+                    repeat: { type: "integer", title: "Repeat", minimum: 1 },
                 }
             },
             form: ["*"],
