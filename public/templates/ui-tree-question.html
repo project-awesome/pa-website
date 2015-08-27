@@ -1,0 +1,7 @@
+<div ui-tree-handle class="tree-node tree-node-content">
+	{{question.question}} <span style="padding-left: 10px;">{{ question.repeat }}</span>
+<a style="margin-right: 8px;" class="pull-right btn btn-primary btn-xs" data-nodrag ng-click="qdCtrl.openQuestionSettings($index)"><span
+    class="glyphicon glyphicon-cog"></span></a>
+<a style="margin-right: 8px;" class="pull-right btn btn-danger btn-xs" data-nodrag ng-click="remove(this)"><span
+    class="glyphicon glyphicon-remove"></span></a>
+</div>

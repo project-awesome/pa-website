@@ -2,11 +2,19 @@
 
 <hr>
 
-<button ng-click="quizDescriptors.addQuizDescriptor()" type="submit" class="btn btn-primary btn-lg">Add New</button>
-<div class="form-group" style="padding-top:5px;">
-	<textarea class="form-control" rows="5" id="comment" ng-model="quizDescriptors.quizDescriptorText"></textarea>
+<form name="qdCreateForm" class="form-horizontal">
+	<div class="form-group">
+		<div class="col-sm-2">
+			<button ng-disabled="qdCreateForm.$invalid" ng-click="quizDescriptors.addQuizDescriptor()" type="submit" class="btn btn-primary">Add New</button>
+		</div>
+		<div class="col-sm-7">
+			<input type="text" class="form-control" ng-model="quizDescriptors.quizDescriptorTitle" required></input>
+		</div>
+	</div>
+</form>
+<div>
+	<br>
 </div>
-
 <div>
 
 	<ul class="quizzes">

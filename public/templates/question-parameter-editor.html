@@ -1,0 +1,18 @@
+<div class="modal-header">
+    <h3 class="modal-title">{{ questionCtrl.model.question }}</h3>
+    <hr>
+      <div class="row">
+        <div class="col-sm-6">
+          <div>
+            <form name="questionForm" sf-schema="questionCtrl.schema" sf-form="questionCtrl.form" sf-model="questionCtrl.model" sf-options="questionCtrl.options"></form>
+          </div>
+        </div>
+        <div class="col-sm-6">
+          <pre>{{ questionCtrl.model | json }}</pre>
+        </div>
+      </div>
+</div>
+<div class="modal-footer">
+    <button class="btn btn-primary" type="button" ng-disabled="questionForm.$invalid" ng-click="questionCtrl.done()">Done</button>
+    <button class="btn btn-warning" type="button" ng-click="questionCtrl.cancel()">Cancel</button>
+</div>
