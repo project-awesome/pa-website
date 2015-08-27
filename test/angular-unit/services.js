@@ -1,23 +1,31 @@
 describe('Angular Services', function() {
 
 
-	describe('QuestionTypes', function() {
-		var QuestionTypes;
+	describe('PAQuestions', function() {
+		var PAQuestions;
 
 		beforeEach(function() {
 			module('awesomeApp');
-		    inject(function(_QuestionTypes_) {
-		    	QuestionTypes = _QuestionTypes_;
+		    inject(function(_PAQuestions_) {
+		    	PAQuestions = _PAQuestions_;
 		    });
 		});
 
-		it('should contain changeOfBase', function() {
-			expect(QuestionTypes).to.include('changeOfBase');
+		describe('getQuestionTypes()', function() {
+
+			it('should return an array', function() {
+				expect(PAQuestions.getQuestionTypes()).to.be.an('array');
+			});
+
+			it('each element should be a string', function() {
+				var questionTypes = PAQuestions.getQuestionTypes();
+				for (var i = 0; questionTypes.length > i; i++) {
+					expect(questionTypes[i]).to.be.a('string');
+				}
+			});
+
 		});
 
-		it('should contain binHexOctDec', function() {
-			expect(QuestionTypes).to.include('binHexOctDec');
-		});
 
 
 	});

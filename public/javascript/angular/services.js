@@ -31,8 +31,6 @@ awesomeApp.factory("AuthService",['$cookies', 'Restangular', function($cookies, 
 	return authService;
 }]);
 
-awesomeApp.value('QuestionTypes', ['changeOfBase', 'binHexOctDec']);
-
 awesomeApp.factory('SeedGenerator', [function() {
     var generator = {};
     generator.getSeed = function() {
@@ -47,7 +45,19 @@ awesomeApp.factory('SeedGenerator', [function() {
     return generator;
 }]);
 
+awesomeApp.factory('PAQuestions', [function() {
+    var paQuestions = {};
+    var questions = [
+        { name: "binHexOctDec" },
+        { name: "changeOfBase" }
+    ];
 
+    generator.getQuestionTypes = function() {
+        return questions.map(function(q) { return q.name });
+    }
+
+    return paQuestions;
+}]);
 
 
 
