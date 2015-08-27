@@ -26,6 +26,45 @@ describe('Angular Services', function() {
 
 		});
 
+		describe('getSchemaDefinition', function() {
+			it('should return an object for each of the question types', function() {
+				var questionTypes = PAQuestions.getQuestionTypes();
+				for (var i = 0; questionTypes.length > i; i++) {
+					expect(PAQuestions.getSchemaDefinition(questionTypes[i])).to.be.an('object');
+				}
+			});
+			it('should throw an error if the question type does not exist', function() {
+				var fn = function() { PAQuestions.getSchemaDefinition('questionTypeDNE'); }
+				expect(fn).to.throw('Question Type Not Found: questionTypeDNE is not a project awesome question.');
+			});
+		});
+
+		describe('getFormDefinition', function() {
+			it('should return an object for each of the question types', function() {
+				var questionTypes = PAQuestions.getQuestionTypes();
+				for (var i = 0; questionTypes.length > i; i++) {
+					expect(PAQuestions.getFormDefinition(questionTypes[i])).to.be.an('array');
+				}
+			});
+			it('should throw an error if the question type does not exist', function() {
+				var fn = function() { PAQuestions.getFormDefinition('questionTypeDNE'); }
+				expect(fn).to.throw('Question Type Not Found: questionTypeDNE is not a project awesome question.');
+			});
+		});
+
+		describe('getTemplate', function() {
+			it('should return an object for each of the question types', function() {
+				var questionTypes = PAQuestions.getQuestionTypes();
+				for (var i = 0; questionTypes.length > i; i++) {
+					expect(PAQuestions.getTemplate(questionTypes[i])).to.be.an('object');
+				}
+			});
+			it('should throw an error if the question type does not exist', function() {
+				var fn = function() { PAQuestions.getTemplate('questionTypeDNE'); }
+				expect(fn).to.throw('Question Type Not Found: questionTypeDNE is not a project awesome question.');
+			});
+		});
+
 
 
 	});
