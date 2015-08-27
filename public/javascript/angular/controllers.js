@@ -1,10 +1,14 @@
 'use strict';
 
-awesomeApp.controller("QuizDescriptorCtrl", ['qd', 'AuthService', 'Flash', function(qd, AuthService, Flash) {
+awesomeApp.controller("QuizDescriptorCtrl", ['qd', 'AuthService', 'Flash', '$modal', 'PAQuestions', function(qd, AuthService, Flash, $modal, PAQuestions) {
     var vm = this;
     vm.qd = qd;
     vm.isOwner = AuthService.getAwesomeId() == qd.UserAwesomeId;
     vm.waitingForResponse = false;
+
+    vm.addNewQuestion = function(questionType) {
+        vm.qd.descriptor.quiz.unshift(PAQuestions.getTemplate(questionType));
+    }
 
     vm.saveSettings = function() {
         vm.waitingForResponse = true;
@@ -12,6 +16,18 @@ awesomeApp.controller("QuizDescriptorCtrl", ['qd', 'AuthService', 'Flash', funct
             vm.waitingForResponse = false;
             vm.qd = newQD;
             Flash.create('success', '<strong> Quiz Descriptor Saved:</strong>  id = ' + qd.id + '.', 'custom-class');
+        }, function() {
+            vm.waitingForResponse = false;
+            Flash.create('warning', '<strong> Not Saved:</strong>  Something went wrong.', 'custom-class');
+        });
+    }
+
+    vm.saveQuestions = function() {
+        vm.waitingForResponse = true;
+        vm.qd.customPUT({ descriptor: vm.qd.descriptor }).then(function(newQD) {
+            vm.waitingForResponse = false;
+            vm.qd = newQD;
+            Flash.create('success', '<strong> Success:</strong>  Quiz descriptor saved.', 'custom-class');
         }, function() {
             vm.waitingForResponse = false;
             Flash.create('warning', '<strong> Not Saved:</strong>  Something went wrong.', 'custom-class');
@@ -29,10 +45,49 @@ awesomeApp.controller("QuizDescriptorCtrl", ['qd', 'AuthService', 'Flash', funct
             Flash.create('warning', '<strong> Not Published:</strong>  Something went wrong.', 'custom-class');
         });
     }
+
+    vm.openQuestionSettings = function(i) {
+        var modalInstance = $modal.open({
+            animation: true,
+            templateUrl: 'templates/question-parameter-editor.html',
+            controller: 'QuestionEditCtrl',
+            controllerAs: 'questionCtrl',
+            size: 'lg',
+            resolve: {
+                question: function () {
+                    return angular.copy(qd.descriptor.quiz[i]);
+                }
+            }
+        });
+        modalInstance.result.then(function (question) {
+            qd.descriptor.quiz[i] = question;
+        }, function () {
+            //$log.info('Modal dismissed at: ' + new Date());
+        });
+    }
     
 
     return vm;
     
+}]);
+
+
+awesomeApp.controller("QuestionEditCtrl", ['question', '$modalInstance', 'PAQuestions', function(question, $modalInstance, PAQuestions) {
+
+    var vm = this;
+    vm.options = { };
+    vm.model = question;
+    vm.schema = PAQuestions.getSchemaDefinition(vm.model.question);
+    vm.form = PAQuestions.getFormDefinition(vm.model.question);
+
+    vm.done = function () {
+        $modalInstance.close(vm.model);
+    };
+
+    vm.cancel = function () {
+        $modalInstance.dismiss('cancel');
+    };
+    return vm;
 }]);
 
 awesomeApp.controller("NavigationCtrl", ['tabs', function(tabs) {
@@ -77,10 +132,10 @@ awesomeApp.controller('InstructorCtrl', ['AuthService', function(AuthService) {
     return vm;
 }]);
 
-awesomeApp.controller('QuestionExportCtrl', ['QuestionTypes', 'SeedGenerator', '$window', function(QuestionTypes, SeedGenerator, $window) {
+awesomeApp.controller('QuestionExportCtrl', ['PAQuestions', 'SeedGenerator', '$window', function(PAQuestions, SeedGenerator, $window) {
     var vm = this;
-    vm.questionTypes = QuestionTypes;
-    vm.questionTypeSelection = QuestionTypes[0];
+    vm.questionTypes = PAQuestions.getQuestionTypes();
+    vm.questionTypeSelection = vm.questionTypes[0];
     vm.defaultCount = 100;
     vm.minCount = 1;
     vm.maxCount = 1000;
@@ -159,23 +214,24 @@ awesomeApp.controller('QuizStartCtrl', [ 'qd', 'SeedGenerator', '$stateParams', 
 awesomeApp.controller('QuizListCtrl', [ 'qds', 'Flash', 'Restangular', function(qds, Flash, Restangular) {
     var vm = this;
     vm.quizzes = qds;
-    vm.quizDescriptorText = "";
+    vm.quizDescriptorTitle = "";
+
+    function createDescriptor(title) {
+        return {
+            "quiz": [{repeat:1,question:"changeOfBase"}],
+            "title": title,
+            "version": "0.1"
+        }
+    }
 
     vm.addQuizDescriptor = function() {
-        var qdJSON;
-        try {
-            qdJSON = JSON.parse(vm.quizDescriptorText);
-        } catch (e) {
-            Flash.create('warning', '<strong id="flash-strong"> Not Saved:</strong>  Invalid Syntax.', 'custom-class');
-            return;
-        }
-        Restangular.all('qd').post({descriptor: qdJSON})
+        Restangular.all('qd').post({descriptor: createDescriptor(vm.quizDescriptorTitle) })
         .then(function(qd) {
             Flash.create('success', '<strong> Quiz Descriptor Saved:</strong>  id = ' + qd.id + '.', 'custom-class');
             vm.quizzes.push(qd);
-            vm.quizDescriptorText = "";
+            vm.quizDescriptorTitle = "";
         }, function(error) {
-            Flash.create('warning', '<strong> Not Saved:</strong>  Invalid Syntax.', 'custom-class');
+            Flash.create('warning', '<strong> Not Saved:</strong>  Something went wrong...', 'custom-class');
         });
     }
 

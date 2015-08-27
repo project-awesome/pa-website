@@ -44,6 +44,50 @@ describe('Angular Controllers', function() {
 				});
 		  	});
 		});
+		describe('openQuestionSettings(i)', function() {
+	  		var $controller, controller, AuthServiceMock = {}, QDMock = {}, ModalMock, ModalInstanceMock, spy;
+			beforeEach(function() {
+	            AuthServiceMock = { getAwesomeId : function() { return 42; } };
+	            ModalInstanceMock = { 
+	            	result : {
+	            		then: function() {}
+	            	}
+	            }
+	            QDMock = { descriptor: { quiz: {} }};
+	            ModalMock = { open : function() { return ModalInstanceMock; }}
+				module('awesomeApp', function ($provide) {
+
+					$provide.value('$modal', ModalMock);
+					$provide.value('AuthService', AuthServiceMock);
+					$provide.value('qd', QDMock);
+			    });
+				inject(function(_$controller_) {
+					$controller = _$controller_;
+				});
+				controller = $controller('QuizDescriptorCtrl', { $scope: {} });
+			});
+			describe('$modal', function() {
+				beforeEach(function() {
+	            	spy = sinon.spy(ModalMock, 'open');
+				});
+				afterEach(function() {
+					spy.restore();
+				});
+
+				it ('should be called once', function() {
+					controller.qd.descriptor.quiz = ["q1", "q2", "q3"];
+					controller.openQuestionSettings(1);
+					expect(spy.calledOnce).to.be.true;
+				});
+
+				it ('should be called with question resolved to the question corresponding to index i', function() {
+					controller.qd.descriptor.quiz = ["q1", "q2", "q3"];
+					controller.openQuestionSettings(1);
+					expect(spy.calledOnce).to.be.true;
+					expect(spy.args[0][0].resolve.question()).to.equal('q2');
+				});
+		  	});
+		});
 	  	describe('API requests', function() {
 	  		var qd = {}
 	  		var AuthServiceMock = {}, QDMock = {};
@@ -103,6 +147,29 @@ describe('Angular Controllers', function() {
      				expect(controller.waitingForResponse).to.be.false;
 		  		});
 		  	});
+		  	describe('saveQuestions()', function() {
+		  		it('should make a put request to /api/qd/:id', function() {
+     				var controller = createController();
+		  			$httpBackend.expectPUT('/api/qd/'+controller.qd.id);
+     				controller.saveQuestions();
+     				$httpBackend.flush();
+		  		});
+		  		it('should have set qd appropriately', function() {
+     				var controller = createController();
+		  			$httpBackend.expectPUT('/api/qd/'+controller.qd.id);
+     				controller.saveQuestions();
+     				$httpBackend.flush();
+     				expect(controller.qd.my).to.equal(requestResponse.my);
+		  		});
+		  		it('should set waitingForResponse to true, and back to false when the response comes', function() {
+     				var controller = createController();
+		  			$httpBackend.expectPUT('/api/qd/'+controller.qd.id);
+     				controller.saveQuestions();
+     				expect(controller.waitingForResponse).to.be.true;
+     				$httpBackend.flush();
+     				expect(controller.waitingForResponse).to.be.false;
+		  		});
+		  	});
 		  	describe('publishQuiz()', function() {
 		  		it('should make a put request to /api/qd/:id', function() {
      				var controller = createController();
@@ -127,6 +194,92 @@ describe('Angular Controllers', function() {
 		  		});
 		  	});
 	  	});
+	});
+
+	describe('QuestionEditCtrl', function() {
+  		var QuestionMock, ModalInstanceMock, PAQuestionsMock;
+		beforeEach(function() {
+			QuestionMock = { question : 'someQuestionType', descriptor : "someObj" };
+			ModalInstanceMock = { close : function(val) { }, dismiss: function(val) { } };
+			PAQuestionsMock = { 
+				getSchemaDefinition : function() { return { mock: 'schemaJSON' } }, 
+				getFormDefinition : function() { return { mock: 'formJSON' } } 
+			};
+			module('awesomeApp', function ($provide) {
+				$provide.value('question', QuestionMock);
+				$provide.value('$modalInstance', ModalInstanceMock);
+				$provide.value('PAQuestions', PAQuestionsMock);
+		    });
+		});
+  		beforeEach(inject(function($injector) {
+			var $controller = $injector.get('$controller');
+			createController = function() {
+				var controller = $controller('QuestionEditCtrl', {'$scope' : {} });
+				return controller;
+			};
+
+		}));
+
+		describe('ctrl.options', function() {
+			it('should be an object', function() {
+				var ctrl = createController();
+				expect(ctrl.options).to.be.an('object');
+			});
+		});
+
+		describe('ctrl.model', function() {
+			it('should be set to the question injection', function() {
+				var ctrl = createController();
+				expect(ctrl.model).to.eql(QuestionMock);
+			});
+		});
+
+		describe('ctrl.schema', function() {
+			it('should equal what PAQuestions.getSchemaDefinition() returns', function() {
+				var ctrl = createController();
+				expect(ctrl.schema).to.eql(PAQuestionsMock.getSchemaDefinition());
+			});
+		});
+
+		describe('ctrl.form', function() {
+			it('should equal what PAQuestions.getFormDefinition() returns', function() {
+				var ctrl = createController();
+				expect(ctrl.form).to.eql(PAQuestionsMock.getFormDefinition());
+			});
+		});
+
+		describe('ctrl.done()', function() {
+			var spy;
+			beforeEach(function() {
+				spy = sinon.spy(ModalInstanceMock, 'close');
+			});
+			afterEach(function() {
+				spy.restore();
+			});
+			it('should call $modalInstance.close() and pass the edited model', function() {
+				var ctrl = createController();
+				ctrl.model = { question : 'someQuestionType', descriptor : "newObj" };
+				ctrl.done();
+				expect(spy.calledOnce).to.be.true;
+				expect(spy.args[0][0]).to.eql({ question : 'someQuestionType', descriptor : "newObj" });
+			});
+		});
+		describe('ctrl.cancel()', function() {
+			var spy;
+			beforeEach(function() {
+				spy = sinon.spy(ModalInstanceMock, 'dismiss');
+			});
+			afterEach(function() {
+				spy.restore();
+			});
+			it("should call $modalInstance.dismiss() and pass 'cancel'", function() {
+				var ctrl = createController();
+				ctrl.cancel();
+				expect(spy.calledOnce).to.be.true;
+				expect(spy.args[0][0]).to.equal('cancel');
+			});
+		});
+
 	});
 
 	describe('NavigationCtrl', function() {
@@ -263,7 +416,8 @@ describe('Angular Controllers', function() {
 	});
 
 	describe('QuestionExportCtrl', function() {
-		var QuestionTypesMock = ['questionType1', 'questionType2'];
+		var PAQuestionsMock = {};
+		PAQuestionsMock.getQuestionTypes = function() { return ['questionType1', 'questionType2']; }
 		var SeedGeneratorMock = {};
 		SeedGeneratorMock.randomSeedMockReturn = '1234abcd';
 		SeedGeneratorMock.getSeed = function() { return this.randomSeedMockReturn; }
@@ -278,7 +432,7 @@ describe('Angular Controllers', function() {
 
 		beforeEach(function() {
 			module('awesomeApp', function($provide) {
-				$provide.value('QuestionTypes', QuestionTypesMock);
+				$provide.value('PAQuestions', PAQuestionsMock);
 				$provide.value('SeedGenerator', SeedGeneratorMock);
 				$provide.value('$window', WindowMock);
 			});
@@ -289,14 +443,14 @@ describe('Angular Controllers', function() {
 		});
 
 		describe('questionTypes', function() {
-			it('should be initialized to the QuestionTypes dependency', function() {
-				expect(controller.questionTypes).to.equal(QuestionTypesMock);
+			it('should be initialized to what PAQuestions.getQuestionTypes() returns', function() {
+				expect(controller.questionTypes).to.eql(PAQuestionsMock.getQuestionTypes());
 			});
 		});
 
 		describe('questionTypeSelection', function() {
-			it('should be initialized to the first element in QuestionType', function() {
-				expect(controller.questionTypeSelection).to.equal(QuestionTypesMock[0]);
+			it('should be initialized to the first element of what PAQuestions.getQuestionTypes() returns', function() {
+				expect(controller.questionTypeSelection).to.equal(PAQuestionsMock.getQuestionTypes()[0]);
 			});
 		});
 
