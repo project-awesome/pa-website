@@ -76,7 +76,7 @@ awesomeApp.factory('PAQuestions', [function() {
                     }
                 }
             },
-            form: [],
+            form: ["*"],
             template: {
                 repeat: 1,
                 question: 'binHexOctDec',
@@ -94,7 +94,7 @@ awesomeApp.factory('PAQuestions', [function() {
                     repeat: { type: "integer", title: "Repeat" }
                 }
             },
-            form: [],
+            form: ["*"],
             template: {
                 repeat: 1,
                 question: 'changeOfBase'
