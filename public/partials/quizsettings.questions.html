@@ -1,5 +1,5 @@
 
-  <div>
+  <div ng-hide="qdCtrl.qd.published">
     <div class="btn-group" dropdown is-open="status.isopen">
       <button id="add-question-button" type="button" class="btn btn-primary" dropdown-toggle ng-disabled="disabled">Add Question <span class="caret"></span>
       </button>
@@ -16,10 +16,8 @@
         <li ng-repeat="question in qdCtrl.qd.descriptor.quiz" ui-tree-node ng-include="'templates/ui-tree-question.html'"></li>
       </ol>
     </div>
-    <div>
+    <div ng-hide="qdCtrl.qd.published">
       <hr>
-    </div>
-    <div>
       <button id="save-quiz-button" type="button" class="btn btn-success" ng-hide="qdCtrl.qd.published" ng-click="qdCtrl.saveQuestions()" ng-disabled="qdCtrl.waitingForResponse">Save Changes</button>
     </div>
   </div>
