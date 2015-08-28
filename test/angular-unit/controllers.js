@@ -197,7 +197,7 @@ describe('Angular Controllers', function() {
 	});
 
 	describe('QuestionEditCtrl', function() {
-  		var QuestionMock, ModalInstanceMock, PAQuestionsMock;
+  		var QuestionMock, ModalInstanceMock, PAQuestionsMock, StateMock;
 		beforeEach(function() {
 			QuestionMock = { question : 'someQuestionType', descriptor : "someObj" };
 			ModalInstanceMock = { close : function(val) { }, dismiss: function(val) { } };
@@ -205,10 +205,12 @@ describe('Angular Controllers', function() {
 				getSchemaDefinition : function() { return { mock: 'schemaJSON' } }, 
 				getFormDefinition : function() { return { mock: 'formJSON' } }
 			};
+			StateMock = { published : true };
 			module('awesomeApp', function ($provide) {
 				$provide.value('question', QuestionMock);
 				$provide.value('$modalInstance', ModalInstanceMock);
 				$provide.value('PAQuestions', PAQuestionsMock);
+				$provide.value('state', StateMock);
 		    });
 		});
   		beforeEach(inject(function($injector) {
@@ -224,6 +226,20 @@ describe('Angular Controllers', function() {
 			it('should be an object', function() {
 				var ctrl = createController();
 				expect(ctrl.options).to.be.an('object');
+			});
+			describe('when quiz is not published', function() {
+				it('should have options.formDefaults.readonly == false', function() {
+					StateMock.published = false;
+					var ctrl = createController();
+					expect(ctrl.options.formDefaults.readonly).to.be.false;
+				});
+			});
+			describe('when published', function() {
+				it('should have options.formDefaults.readonly == true', function() {
+					StateMock.published = true;
+					var ctrl = createController();
+					expect(ctrl.options.formDefaults.readonly).to.be.true;
+				});
 			});
 		});
 

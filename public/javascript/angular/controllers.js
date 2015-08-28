@@ -56,6 +56,9 @@ awesomeApp.controller("QuizDescriptorCtrl", ['qd', 'AuthService', 'Flash', '$mod
             resolve: {
                 question: function () {
                     return angular.copy(vm.qd.descriptor.quiz[i]);
+                },
+                state: function() {
+                    return { published: vm.qd.published };
                 }
             }
         });
@@ -72,10 +75,12 @@ awesomeApp.controller("QuizDescriptorCtrl", ['qd', 'AuthService', 'Flash', '$mod
 }]);
 
 
-awesomeApp.controller("QuestionEditCtrl", ['question', '$modalInstance', 'PAQuestions', '$scope', function(question, $modalInstance, PAQuestions, $scope) {
+awesomeApp.controller("QuestionEditCtrl", ['question', '$modalInstance', 'PAQuestions', 'state', '$scope', function(question, $modalInstance, PAQuestions, state, $scope) {
 
     var vm = this;
-    vm.options = { supressPropertyTitles: true, formDefaults: { startEmpty: true, feedback: false, style: { add: 'btn-primary' } } };
+    vm.published = state.published;
+    console.log(state.published);
+    vm.options = { supressPropertyTitles: true, formDefaults: { readonly: state.published, startEmpty: true, feedback: false, style: { add: 'btn-primary' } } };
     vm.model = question;
     vm.schema = PAQuestions.getSchemaDefinition(vm.model.question);
     vm.form = PAQuestions.getFormDefinition(vm.model.question);

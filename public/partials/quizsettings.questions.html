@@ -20,7 +20,7 @@
       <hr>
     </div>
     <div>
-      <button id="save-quiz-button" type="button" class="btn btn-success" ng-click="qdCtrl.saveQuestions()" ng-disabled="qdCtrl.waitingForResponse">Save Changes</button>
+      <button id="save-quiz-button" type="button" class="btn btn-success" ng-hide="qdCtrl.qd.published" ng-click="qdCtrl.saveQuestions()" ng-disabled="qdCtrl.waitingForResponse">Save Changes</button>
     </div>
   </div>
 
