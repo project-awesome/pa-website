@@ -116,7 +116,6 @@ awesomeApp.controller("QuestionEditCtrl", ['question', '$modalInstance', 'PAQues
 
     var vm = this;
     vm.published = state.published;
-    console.log(state.published);
     vm.options = { supressPropertyTitles: true, formDefaults: { readonly: state.published, startEmpty: true, feedback: false, style: { add: 'btn-primary' } } };
     vm.model = question;
     vm.schema = PAQuestions.getSchemaDefinition(vm.model.question);
