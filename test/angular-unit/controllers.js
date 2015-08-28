@@ -1,17 +1,20 @@
 describe('Angular Controllers', function() {
 	describe('QuizDescriptorCtrl', function() {
 		describe('initialize', function() {
-	  		var $controller, controller, AuthServiceMock = {}, QDMock = {};
+	  		var $controller, controller, AuthServiceMock, QDMock, PAQuestionsMock;
 			beforeEach(function() {
 	            AuthServiceMock = {
 					getAwesomeId : function() {
 						return 42;
 					}
 				};
+				PAQuestionsMock = {
+					getQuestionTypes: function() { return ['qtyp1', 'qtyp2']; }
+				}
 				module('awesomeApp', function ($provide) {
-
 					$provide.value('AuthService', AuthServiceMock);
 					$provide.value('qd', QDMock);
+					$provide.value('PAQuestions', PAQuestionsMock);
 			    });
 				inject(function(_$controller_) {
 					$controller = _$controller_;
@@ -37,10 +40,13 @@ describe('Angular Controllers', function() {
 				});
 		  	});
 			describe('waitingForResponse', function() {
-				describe('should be set to false', function() {
-					it('should be set to true', function() {
-						expect(controller.waitingForResponse).to.be.false;
-					});
+				it('should be set to false', function() {
+					expect(controller.waitingForResponse).to.be.false;
+				});
+		  	});
+		  	describe('questionTypes', function() {
+				it('should be set to PAQuestions.getQuestionTypes()', function() {
+					expect(controller.questionTypes).to.eql.false;
 				});
 		  	});
 		});

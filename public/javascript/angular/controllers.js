@@ -21,6 +21,7 @@ awesomeApp.controller("QuizDescriptorCtrl", ['qd', 'AuthService', 'Flash', '$mod
     vm.qd = qd;
     vm.isOwner = AuthService.getAwesomeId() == qd.UserAwesomeId;
     vm.waitingForResponse = false;
+    vm.questionTypes = PAQuestions.getQuestionTypes();
 
     vm.addNewQuestion = function(questionType) {
         vm.qd.descriptor.quiz.unshift(PAQuestions.getTemplate(questionType));
