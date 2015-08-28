@@ -24,7 +24,8 @@ module.exports = function(config) {
 
     // list of files to exclude
     exclude: [
-      'public/javascript/ext/angular.min.js'
+      'public/javascript/ext/angular.min.js',
+      'public/javascript/ext/bootstrap-switch.min.js'
     ],
 
 

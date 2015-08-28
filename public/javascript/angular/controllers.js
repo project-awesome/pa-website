@@ -1,5 +1,21 @@
 'use strict';
 
+awesomeApp.controller("ConfirmationModalCtrl", ['$modalInstance', 'title', 'description', 'okText', 'cancelText', function($modalInstance, title, description, okText, cancelText) {
+    var vm = this;
+    vm.title = title;
+    vm.description = description;
+    vm.okText = okText;
+    vm.cancelText = cancelText;
+    vm.ok = function () {
+        $modalInstance.close();
+    };
+
+    vm.cancel = function () {
+        $modalInstance.dismiss();
+    };
+
+}]);
+
 awesomeApp.controller("QuizDescriptorCtrl", ['qd', 'AuthService', 'Flash', '$modal', 'PAQuestions', function(qd, AuthService, Flash, $modal, PAQuestions) {
     var vm = this;
     vm.qd = qd;
@@ -31,6 +47,27 @@ awesomeApp.controller("QuizDescriptorCtrl", ['qd', 'AuthService', 'Flash', '$mod
         }, function() {
             vm.waitingForResponse = false;
             Flash.create('warning', '<strong> Not Saved:</strong>  Something went wrong.', 'custom-class');
+        });
+    }
+
+    vm.publishQuizConfirm = function() {
+        var modalInstance = $modal.open({
+            animation: true,
+            templateUrl: 'templates/confirmation-modal.html',
+            controller: 'ConfirmationModalCtrl',
+            controllerAs: 'ctrl',
+            size: 'lg',
+            resolve: {
+                title: function(){ return 'Are you sure?'; },
+                description: function(){ return 'This action cannot be reversed. Once your quiz is published you can not make any changes to the questions.'; },
+                okText: function(){ return 'Publish'; },
+                cancelText: function(){ return 'Cancel'; }
+            }
+        });
+        modalInstance.result.then(function () {
+            vm.publishQuiz();
+        }, function() {
+
         });
     }
 

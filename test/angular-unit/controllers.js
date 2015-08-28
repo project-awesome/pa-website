@@ -44,6 +44,87 @@ describe('Angular Controllers', function() {
 				});
 		  	});
 		});
+		describe('publishQuizConfirm()', function() {
+			var createController;
+	  		var $controller, controller, AuthServiceMock = {}, QDMock = {}, ModalMock, ModalInstanceMock;
+	  		var modalOpenSpy, publishQuizStub;
+			beforeEach(function() {
+	            AuthServiceMock = { getAwesomeId : function() { return 42; } };
+	            ModalInstanceMock = { 
+	            	result : {
+	            		then: function(callbackOk, callbackCancel) { }
+	            	}
+	            };
+	            QDMock = { descriptor: { quiz: {} }};
+	            ModalMock = { open : function() { return ModalInstanceMock; }}
+				module('awesomeApp', function ($provide) {
+
+					$provide.value('$modal', ModalMock);
+					$provide.value('AuthService', AuthServiceMock);
+					$provide.value('qd', QDMock);
+			    });
+				inject(function(_$controller_) {
+					$controller = _$controller_;
+				});
+				createController = function() {
+					var controller = $controller('QuizDescriptorCtrl', {'$scope' : {}});
+					return controller;
+				};
+			});
+			describe('$modal.open()', function() {
+				beforeEach(function() {
+					modalOpenSpy = sinon.spy(ModalMock, 'open');
+				});
+				afterEach(function() {
+					modalOpenSpy.restore();
+				});
+				it('should be called once', function() {
+					var ctrl = createController();
+					ctrl.publishQuizConfirm();
+					expect(modalOpenSpy.calledOnce).to.be.true;
+				});
+			});
+			describe('callback', function() {
+				describe('confirm', function() {
+					var ctrl;
+					beforeEach(function() {
+			            ModalInstanceMock = { 
+			            	result : {
+			            		then: function(callbackOk, callbackCancel) { callbackOk(); }
+			            	}
+			            }
+						ctrl = createController();
+						publishQuizStub = sinon.stub(ctrl, 'publishQuiz').returns(1);
+					});
+					afterEach(function() {
+						modalOpenSpy.restore();
+					});
+					it('publishQuiz should be called once', function() {
+						ctrl.publishQuizConfirm();
+						expect(publishQuizStub.calledOnce).to.be.true;
+					});
+				});
+				describe('cancel', function() {
+					var ctrl;
+					beforeEach(function() {
+			            ModalInstanceMock = { 
+			            	result : {
+			            		then: function(callbackOk, callbackCancel) { callbackCancel(); }
+			            	}
+			            }
+						ctrl = createController();
+						publishQuizStub = sinon.stub(ctrl, 'publishQuiz').returns(1);
+					});
+					afterEach(function() {
+						modalOpenSpy.restore();
+					});
+					it('publishQuiz should not be called', function() {
+						ctrl.publishQuizConfirm();
+						expect(publishQuizStub.called).to.be.false;
+					});
+				});
+			});
+		});
 		describe('openQuestionSettings(i)', function() {
 	  		var $controller, controller, AuthServiceMock = {}, QDMock = {}, ModalMock, ModalInstanceMock, spy;
 			beforeEach(function() {
@@ -194,6 +275,93 @@ describe('Angular Controllers', function() {
 		  		});
 		  	});
 	  	});
+	});
+
+	describe('ConfirmationModalCtrl', function() {
+  		var ModalInstanceMock, TitleMock, DescriptionMock, OkTextMock, CancelTextMock;
+		beforeEach(function() {
+			QuestionMock = { question : 'someQuestionType', descriptor : "someObj" };
+			ModalInstanceMock = { close : function() { }, dismiss: function() { } };
+			TitleMock = 'Sample Title';
+			DescriptionMock = 'Sample Description';
+			OkTextMock = 'Sample Okay';
+			CancelTextMock = 'Sample Cancel';
+
+			module('awesomeApp', function ($provide) {
+				$provide.value('$modalInstance', ModalInstanceMock);
+				$provide.value('title', TitleMock);
+				$provide.value('description', DescriptionMock);
+				$provide.value('okText', OkTextMock);
+				$provide.value('cancelText', CancelTextMock);
+		    });
+		});
+  		beforeEach(inject(function($injector) {
+			var $controller = $injector.get('$controller');
+			createController = function() {
+				var controller = $controller('ConfirmationModalCtrl', {'$scope' : {} });
+				return controller;
+			};
+
+		}));
+
+		describe('ctrl.title', function() {
+			it('should be set to the title injection', function() {
+				var ctrl = createController();
+				expect(ctrl.title).to.equal(TitleMock);
+			});
+		});
+
+		describe('ctrl.description', function() {
+			it('should be set to the description injection', function() {
+				var ctrl = createController();
+				expect(ctrl.description).to.equal(DescriptionMock);
+			});
+		});
+
+		describe('ctrl.okText', function() {
+			it('should be set to the okText injection', function() {
+				var ctrl = createController();
+				expect(ctrl.okText).to.equal(OkTextMock);
+			});
+		});
+
+		describe('ctrl.cancelText', function() {
+			it('should be set to the cancelText injection', function() {
+				var ctrl = createController();
+				expect(ctrl.cancelText).to.equal(CancelTextMock);
+			});
+		});
+
+		describe('ctrl.ok()', function() {
+			var spy;
+			beforeEach(function() {
+				spy = sinon.spy(ModalInstanceMock, 'close');
+			});
+			afterEach(function() {
+				spy.restore();
+			});
+			it('should call $modalInstance.close() once', function() {
+				var ctrl = createController();
+				ctrl.ok();
+				expect(spy.calledOnce).to.be.true;
+			});
+		});
+
+		describe('ctrl.cancel()', function() {
+			var spy;
+			beforeEach(function() {
+				spy = sinon.spy(ModalInstanceMock, 'dismiss');
+			});
+			afterEach(function() {
+				spy.restore();
+			});
+			it('should call $modalInstance.dismiss() once', function() {
+				var ctrl = createController();
+				ctrl.cancel();
+				expect(spy.calledOnce).to.be.true;
+			});
+		});
+
 	});
 
 	describe('QuestionEditCtrl', function() {
