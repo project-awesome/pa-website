@@ -178,7 +178,7 @@ awesomeApp.config(['$stateProvider', '$urlRouterProvider', '$locationProvider', 
 
 	$rootScope.$on( "$stateChangeStart", function(event, toState, toParams, fromState, fromParams) {
 		Flash.dismiss();
-		var requiresAuth = ['instructor.myquizdescriptors', 'usersettings', 'quizsettings.general'];
+		var requiresAuth = ['instructor.myquizdescriptors', 'usersettings', 'quizsettings.general', 'quizsettings.questions'];
 		var requiresUnauth = ['login'];
 		var authenticated = AuthService.isAuthenticated();
 		if (!authenticated) {
