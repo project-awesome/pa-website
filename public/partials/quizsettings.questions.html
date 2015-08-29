@@ -9,7 +9,7 @@
     </div>
   </div>
 <div class="row">
-  <div class="col-sm-6">
+  <div class="col-sm-12">
     <div ui-tree data-empty-placeholder-enabled="false" id="tree-root" class="custom-ui-tree">
       <ol ui-tree-nodes ng-model="qdCtrl.qd.descriptor.quiz">
         <li ng-repeat="question in qdCtrl.qd.descriptor.quiz" ui-tree-node ng-include="'templates/ui-tree-question.html'"></li>
@@ -19,12 +19,5 @@
       <hr>
       <button id="save-quiz-button" type="button" class="btn btn-success" ng-hide="qdCtrl.qd.published" ng-click="qdCtrl.saveQuestions()" ng-disabled="qdCtrl.waitingForResponse">Save Changes</button>
     </div>
-  </div>
-
-  <div class="col-sm-6">
-    <div class="info">
-      {{info}}
-    </div>
-    <pre class="code">{{ qdCtrl.qd.descriptor.quiz | json }}</pre>
   </div>
 </div>
