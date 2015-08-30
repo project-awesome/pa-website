@@ -4,6 +4,7 @@ var passport = require('passport');
 var session = require('express-session');
 var bodyParser = require('body-parser');
 
+var favicon = require('serve-favicon');
 
 // Refreshing the page sometimes rendered an empty html page. app.disable('etag'); fixes it.
 app.disable('etag');
@@ -11,6 +12,7 @@ app.disable('etag');
 app.set('port', (process.env.PORT || 5000));
 
 app.use(express.static(__dirname + '/public'));
+app.use(favicon(__dirname + '/public/favicon.ico'));
 
 // views is directory for all template files
 app.set('views', __dirname + '/views');
