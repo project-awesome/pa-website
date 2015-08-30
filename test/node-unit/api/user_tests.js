@@ -13,7 +13,7 @@ describe('User API', function() {
     describe('when users are unauthenticated', function() {
 
       before(function(done) {
-          utils.resetEnvironment(app, models).then(function() {
+          utils.resetEnvironment(app).then(function() {
             done();
           });
       });
@@ -44,7 +44,7 @@ describe('User API', function() {
 
     describe('Authenticated User', function() {
       before(function(done) {
-          utils.resetEnvironment(app, models).then(function() {
+          utils.resetEnvironment(app).then(function() {
             utils.authenticateTestUser().then(function(user) {
               testUser = user;
               done();

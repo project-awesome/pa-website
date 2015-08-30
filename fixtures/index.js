@@ -2,9 +2,9 @@ var models = require('../models');
 var utils = require('../test/utils');
 
 var quizDescriptorFixtures = [
-  { descriptor : utils.getSampleQuizDescriptor("First Fixture Example Quiz") },
-  { descriptor : utils.getSampleQuizDescriptor("Second Fixture Example Quiz") },
-  { descriptor : utils.getSampleQuizDescriptor("Third Fixture Example Quiz") }
+  { descriptor : utils.getSampleQuizDescriptor("First Fixture Example Quiz"), published: true },
+  { descriptor : utils.getSampleQuizDescriptor("Second Fixture Example Quiz"), published: true },
+  { descriptor : utils.getSampleQuizDescriptor("Third Fixture Example Quiz"), published: true }
 ];
 
 

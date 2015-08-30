@@ -31,8 +31,6 @@ awesomeApp.factory("AuthService",['$cookies', 'Restangular', function($cookies, 
 	return authService;
 }]);
 
-awesomeApp.value('QuestionTypes', ['changeOfBase', 'binHexOctDec']);
-
 awesomeApp.factory('SeedGenerator', [function() {
     var generator = {};
     generator.getSeed = function() {
@@ -47,13 +45,90 @@ awesomeApp.factory('SeedGenerator', [function() {
     return generator;
 }]);
 
+awesomeApp.factory('PAQuestions', [function() {
+    var paQuestions = {};
+    var questions = [
+        { 
+            name: "binHexOctDec",
+            schema: {
+                type: "object",
+                properties: {
+                    repeat: { type: "integer", title: "Repeat", minimum: 1, required: true },
+                    parameters: { 
+                        type: "object",
+                        title: "Parameters",
+                        properties: {
+                            spaceBinary: { type: "boolean", title: "Space Binary" },
+                            conversions: {
+                                type: "array",
+                                title: "Conversions",
+                                items: {
+                                    type: "object",
+                                    properties: {
+                                        fromRad: { type: "integer", title: "From Radix", minimum: 2, maximum: 36, required:true },
+                                        toRad: { type: "integer", title: "To Radix", minimum: 2, maximum: 36, required:true },
+                                        minVal: { type: "integer", title: "Minium Value", minimum: 0, required:true },
+                                        maxVal: { type: "integer", title: "Maximum Value", minimum: 0, required:true }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            form: ["*"],
+            template: {
+                repeat: 1,
+                question: 'binHexOctDec',
+                parameters: {
+                    spaceBinary: true,
+                    conversions: []
+                }
+            }
+        },
+        { 
+            name: "changeOfBase",
+            schema: {
+                type: "object",
+                properties: {
+                    repeat: { type: "integer", title: "Repeat", minimum: 1, required: true },
+                }
+            },
+            form: [
+                "*"
+            ],
+            template: {
+                repeat: 1,
+                question: 'changeOfBase'
+            }
+        }
+    ];
 
+    function getQuestionByType(questionType) {
+        for (var i = 0; questions.length > i; i++)
+            if (questions[i].name === questionType)
+                return questions[i];
+        throw "Question Type Not Found: " + questionType + " is not a project awesome question.";
+    }
 
+    paQuestions.getQuestionTypes = function() {
+        return questions.map(function(q) { return q.name });
+    }
 
+    paQuestions.getSchemaDefinition = function(questionType) {
+        return getQuestionByType(questionType).schema;
+    }
 
+    paQuestions.getFormDefinition = function(questionType) {
+        return getQuestionByType(questionType).form;
+    }
 
+    paQuestions.getTemplate = function(questionType) {
+        return getQuestionByType(questionType).template;
+    } 
 
-
+    return paQuestions;
+}]);
 
 
 

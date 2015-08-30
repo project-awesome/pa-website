@@ -1,0 +1,15 @@
+<div class="container">
+	<div class="row">
+
+			<div class="col-md-3 col-sm-3">
+
+				<div class="list-group">
+					<a ng-repeat="tab in navCtrl.tabs" class="list-group-item" ui-sref-active="active" ui-sref="{{ tab.state }}">{{ tab.label }}</a>
+				</div>
+			</div>
+
+			<div class="col-md-9 col-sm-9">
+				<div ui-view></div>
+			</div>
+	</div>
+</div>

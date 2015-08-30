@@ -9,12 +9,13 @@ module.exports = function(config) {
 
     // frameworks to use
     // available frameworks: https://npmjs.org/browse/keyword/karma-adapter
-    frameworks: ['mocha', 'chai'],
+    frameworks: ['mocha', 'chai', 'chai-sinon'],
 
 
     // list of files / patterns to load in the browser
     files: [
       'node_modules/angular/angular.js',
+      'public/javascript/ext/schema-form.min.js',
       'public/javascript/ext/*.js',
       'public/javascript/angular/*.js',
       'test/angular-unit/*.js'
@@ -23,7 +24,8 @@ module.exports = function(config) {
 
     // list of files to exclude
     exclude: [
-      'public/javascript/ext/angular.min.js'
+      'public/javascript/ext/angular.min.js',
+      'public/javascript/ext/bootstrap-switch.min.js'
     ],
 
 

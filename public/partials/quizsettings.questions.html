@@ -1,0 +1,23 @@
+
+  <div ng-hide="qdCtrl.qd.published">
+    <div class="btn-group" dropdown is-open="status.isopen">
+      <button id="add-question-button" type="button" class="btn btn-primary" dropdown-toggle ng-disabled="disabled">Add Question <span class="caret"></span>
+      </button>
+      <ul class="dropdown-menu" role="menu" aria-labelledby="single-button">
+        <li ng-repeat="qType in qdCtrl.questionTypes" role="menuitem"><a href="#" ng-click="qdCtrl.addNewQuestion(qType)">{{ qType }}</a></li>
+      </ul>
+    </div>
+  </div>
+<div class="row">
+  <div class="col-sm-12">
+    <div ui-tree data-empty-placeholder-enabled="false" id="tree-root" class="custom-ui-tree">
+      <ol ui-tree-nodes ng-model="qdCtrl.qd.descriptor.quiz">
+        <li ng-repeat="question in qdCtrl.qd.descriptor.quiz" ui-tree-node ng-include="'templates/ui-tree-question.html'"></li>
+      </ol>
+    </div>
+    <div ng-hide="qdCtrl.qd.published">
+      <hr>
+      <button id="save-quiz-button" type="button" class="btn btn-success" ng-hide="qdCtrl.qd.published" ng-click="qdCtrl.saveQuestions()" ng-disabled="qdCtrl.waitingForResponse">Save Changes</button>
+    </div>
+  </div>
+</div>

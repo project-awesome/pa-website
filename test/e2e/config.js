@@ -1,5 +1,5 @@
 exports.config = {
-	specs:['env_vars.js', 'navigation.js', 'routing.js', 'pages/*.js'],
+	specs:['env_vars.js', 'navigation.js', 'routing.js', 'pages/*.js', 'auth_routes.js'],
 	baseUrl: 'http://localhost:5000',
 	framework:'mocha',
 	mochaOpts: {

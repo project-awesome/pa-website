@@ -11,7 +11,7 @@ module.exports.createLogoutUrl = function() {
     return '/logout';
 }
 
-module.exports.resetEnvironment = function(a, m) {
+module.exports.resetEnvironment = function(a) {
 	return models.sequelize.sync({ force: true }).then(function () {
 		passportStub.uninstall(a);
 		passportStub.install(a);
@@ -54,32 +54,6 @@ module.exports.waitForElement = function (element) {
     },5000);
     return element;
 };
-var userCount = 0;
-module.exports.protractorLogin = function() {
-	userCount++;
-	var user = {};
-    return browser.get(module.exports.createTestAuthUrl('test', userCount, 'testtoken', 'email@test.com', 'Tester' + userCount, 'student')).then(function() {
-        browser.get('/');
-        module.exports.waitForElement(element(by.id('home-button')));
-        return browser.findElement(by.id('user-dropdown')).click().then(function() {
-            return browser.manage().getCookies().then(function(cookies) {
-            	for (var i = 0; cookies.length > i; i++)
-            		user[cookies[i].name] = cookies[i].value;
-            	return user;
-            });
-        });
-    });
-}
-module.exports.protractorLogout = function() {
-	browser.ignoreSynchronization = true;
-	return browser.get('/logout').then(function() {
-		browser.ignoreSynchronization = false;
-		return browser.get('/').then(function() {
-			return module.exports.waitForElement(element(by.id('home-button')));
-		});
-	});
-}
-
 
 module.exports.validDescriptor = {
     "version" : "0.1",
@@ -87,7 +61,35 @@ module.exports.validDescriptor = {
     "quiz": [
     	{
 		    "question": "binHexOctDec",
-		    "repeat": 2,
+		    "repeat": 4,
+		    "parameters": {
+		    	"conversions": [
+		    		{ 
+		    			fromRad: 2, 
+		    			toRad: 8,
+		    			minVal: 1,
+		    			maxVal: 1024,
+		    		},
+		    		{ 
+		    			fromRad: 8, 
+		    			toRad: 2,
+		    			minVal: 1,
+		    			maxVal: 1024,
+		    		},
+		    		{ 
+		    			fromRad: 2, 
+		    			toRad: 16,
+		    			minVal: 1,
+		    			maxVal: 1024,
+		    		},
+		    		{ 
+		    			fromRad: 16, 
+		    			toRad: 2,
+		    			minVal: 1,
+		    			maxVal: 1024,
+		    		}
+		    	]
+		    }
 		},
     	{
 		    "question": "changeOfBase",
