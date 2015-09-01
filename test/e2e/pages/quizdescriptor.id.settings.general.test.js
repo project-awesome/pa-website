@@ -58,7 +58,7 @@ describe('/quizdescriptor/:id/settings/general', function() {
                     notMyQD = res1;
                     utils.authenticateTestUser().then(function(user) {
                         testUser = user;
-                        testUser.createQuizDescriptor( { descriptor: utils.getSampleQuizDescriptor() } ).then(function(res2) {
+                        testUser.createQuizDescriptor( { descriptor: utils.getSampleQuizDescriptor(), title: 'My QD' } ).then(function(res2) {
                             myQD = res2;
                             done();
                         });
@@ -87,6 +87,24 @@ describe('/quizdescriptor/:id/settings/general', function() {
             it('should successfully navigate to /quizdescriptor/:id/settings/general', function() {
                 expect(browser.getCurrentUrl()).to.eventually.include('/quizdescriptor/'+myQD.id+'/settings/general');
             });
+            describe('title', function() {
+                var titleInput;
+                before(function() {
+                    titleInput = element(by.id('quiz-title-input'));
+                });
+                it('should already be entered as input in the form', function() {
+                    expect(titleInput.getAttribute('value')).to.eventually.equal(myQD.title);
+                });
+            });
         });
     });
 });
+
+
+
+
+
+
+
+
+
