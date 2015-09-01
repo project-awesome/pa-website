@@ -44,7 +44,7 @@ describe('/quiz/:id/:seed', function() {
 			browser.get('/quiz/'+qd.id+'/'+ seed + '?q=1&k=1').then(done);
     	});
         it('should display the quiz title on the page', function() {
-            expect(element(by.binding('quizCtrl.quiz.title')).getText()).to.eventually.equal(qd.descriptor.title);
+            expect(element(by.binding('quizCtrl.title')).getText()).to.eventually.equal(qd.title);
         });
         it('should display the same seed on the page and in the url', function() {
             expect(element(by.id('quiz-seed')).getText()).to.eventually.equal(seed);

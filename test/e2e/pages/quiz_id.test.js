@@ -48,7 +48,7 @@ describe('/quiz/:id', function() {
         		done();
         	});
 	        it('should display the quiz title on the page', function() {
-	            expect(element(by.binding('quizStarter.qd.descriptor.title')).getText()).to.eventually.equal(qd.descriptor.title);
+	            expect(element(by.binding('quizStarter.qd.title')).getText()).to.eventually.equal(qd.title);
 	        });
         });
 

@@ -26,7 +26,7 @@ describe('/instructor/allquizdescriptors', function() {
     describe('quiz descriptor list', function() {
         var qdCount;
         before(function(done) {
-            models.QuizDescriptor.create({ descriptor: utils.getSampleQuizDescriptor("Some Random QD"), published: true } ).then(function() {
+            models.QuizDescriptor.create({ descriptor: utils.getSampleQuizDescriptor(), published: true } ).then(function() {
             	models.QuizDescriptor.count().then(function(count) {
             		qdCount = count;
 	                browser.get('/instructor/allquizdescriptors').then(function() {

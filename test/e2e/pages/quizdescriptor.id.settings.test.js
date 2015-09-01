@@ -15,7 +15,7 @@ describe('/quizdescriptor/:id/settings/* navigation', function() {
             utils.resetEnvironment(app).then(function() {
                 utils.authenticateTestUser().then(function(user) {
                     testUser = user;
-                    testUser.createQuizDescriptor( { descriptor: utils.getSampleQuizDescriptor("Test User's QD") } ).then(function(res) {
+                    testUser.createQuizDescriptor( { descriptor: utils.getSampleQuizDescriptor() } ).then(function(res) {
                         qd = res;
                         done();
                     });

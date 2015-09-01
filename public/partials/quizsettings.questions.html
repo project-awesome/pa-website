@@ -11,8 +11,8 @@
 <div class="row">
   <div class="col-sm-12">
     <div ui-tree data-empty-placeholder-enabled="false" id="tree-root" class="custom-ui-tree">
-      <ol ui-tree-nodes ng-model="qdCtrl.qd.descriptor.quiz">
-        <li ng-repeat="question in qdCtrl.qd.descriptor.quiz" ui-tree-node ng-include="'templates/ui-tree-question.html'"></li>
+      <ol ui-tree-nodes ng-model="qdCtrl.qd.descriptor.questions">
+        <li ng-repeat="question in qdCtrl.qd.descriptor.questions track by $index" ui-tree-node ng-include="'templates/ui-tree-question.html'"></li>
       </ol>
     </div>
     <div ng-hide="qdCtrl.qd.published">

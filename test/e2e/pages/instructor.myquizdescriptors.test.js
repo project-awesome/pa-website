@@ -35,9 +35,9 @@ describe('/instructor/myquizdescriptors', function() {
             // Make sure the list only contains the one qd that belongs to testUser
             models.QuizDescriptor.destroy({ where: { UserAwesomeId: testUser.awesome_id} }).then(function() {
                 models.User.findOne({ where: {awesome_id: testUser.awesome_id } }).then(function(tu) {
-                    tu.createQuizDescriptor( { descriptor: utils.getSampleQuizDescriptor("Test User's QD") } ).then(function(res) {
+                    tu.createQuizDescriptor( { descriptor: utils.getSampleQuizDescriptor() } ).then(function(res) {
                         testUsersOnlyQD = res;
-                        models.QuizDescriptor.create({ descriptor: utils.getSampleQuizDescriptor("Not Test User's QD") } ).then(function() {
+                        models.QuizDescriptor.create({ descriptor: utils.getSampleQuizDescriptor() } ).then(function() {
                             browser.get('/instructor/myquizdescriptors').then(function() {
                                 done();
                             });
