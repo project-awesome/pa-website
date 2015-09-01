@@ -25,8 +25,45 @@ describe('QuizDescriptor', function() {
       });
     });
   });
-
-  describe('published property', function() {
+  describe('title field', function() {
+    describe('default value when unspecified', function() {
+      var res;
+      before(function(done) {
+        models.QuizDescriptor.create({descriptor: validDescriptor}).then(function(qd) {
+          res = qd;
+          done();
+        });
+      });
+      after(function(done) {
+        res.destroy().then(function() {
+          done();
+        });
+      });
+      it('should be set to false', function(done) {
+        expect(res.title).to.equal('');
+        done();
+      });
+    });
+    describe('when set to "Sample Title"', function() {
+      var res;
+      before(function(done) {
+        models.QuizDescriptor.create({descriptor: validDescriptor, title: 'Sample Title'}).then(function(qd) {
+          res = qd;
+          done();
+        });
+      });
+      after(function(done) {
+        res.destroy().then(function() {
+          done();
+        });
+      });
+      it('should be set to "Sample Title"', function(done) {
+        expect(res.title).to.equal('Sample Title');
+        done();
+      });
+    });
+  });
+  describe('published field', function() {
     describe('default value when unspecified', function() {
       var res;
       before(function(done) {
@@ -64,7 +101,7 @@ describe('QuizDescriptor', function() {
       });
     });
   });
-  describe('hidden property', function() {
+  describe('hidden field', function() {
     describe('default value when unspecified', function() {
       var res;
       before(function(done) {
