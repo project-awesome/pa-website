@@ -57,37 +57,16 @@ module.exports.waitForElement = function (element) {
 
 module.exports.validDescriptor = {
     "version" : "0.1",
-    "title" : "Example QuizJSON 1",
-    "quiz": [
+    "questions": [
     	{
 		    "question": "binHexOctDec",
 		    "repeat": 4,
 		    "parameters": {
 		    	"conversions": [
-		    		{ 
-		    			fromRad: 2, 
-		    			toRad: 8,
-		    			minVal: 1,
-		    			maxVal: 1024,
-		    		},
-		    		{ 
-		    			fromRad: 8, 
-		    			toRad: 2,
-		    			minVal: 1,
-		    			maxVal: 1024,
-		    		},
-		    		{ 
-		    			fromRad: 2, 
-		    			toRad: 16,
-		    			minVal: 1,
-		    			maxVal: 1024,
-		    		},
-		    		{ 
-		    			fromRad: 16, 
-		    			toRad: 2,
-		    			minVal: 1,
-		    			maxVal: 1024,
-		    		}
+		    		{ radix: {from:2,to:8}, range:{min:1, max:1024} },
+		    		{ radix: {from:8,to:2}, range:{min:1, max:1024} },
+		    		{ radix: {from:2,to:16}, range:{min:1, max:1024} },
+		    		{ radix: {from:16,to:2}, range:{min:1, max:1024} }
 		    	]
 		    }
 		},
@@ -98,16 +77,17 @@ module.exports.validDescriptor = {
 	]
 };
 
-module.exports.getSampleQuizDescriptor = function(title) {
+module.exports.getSampleQuizDescriptor = function() {
 	var qd = _und.clone(module.exports.validDescriptor);
-	qd.title = title;
 	return qd;
 }
 
 
 module.exports.insertQuizDescriptor = function(m, title) {
+	if (!title)
+		title = 'Sample Quiz Descriptor';
 	return m.QuizDescriptor.create( 
-		{ descriptor : module.exports.getSampleQuizDescriptor(title) }
+		{ descriptor : module.exports.getSampleQuizDescriptor(), title: title }
 	);
 }
 
