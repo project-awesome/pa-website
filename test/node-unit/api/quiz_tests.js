@@ -92,8 +92,8 @@ describe('Quiz API', function() {
           .expect(200)
           .end(function(err, res) {
             if (err) return done(err);
-            expect(res.body.seed).to.equal('1234abcd');
-            expect(projectAwesome.QuizValidator.isValid(res.body)).to.be.true;
+            expect(res.body.quiz.seed).to.equal('1234abcd');
+            expect(projectAwesome.QuizValidator.isValid(res.body.quiz)).to.be.true;
             done();
           });
       });

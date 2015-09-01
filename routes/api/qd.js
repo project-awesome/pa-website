@@ -14,14 +14,22 @@ module.exports = function(app) {
         } else if (!req.body.descriptor) {
             res.status(400).end();
             return;
-        } else if (!projectAwesome.isValidQuizDescriptor(req.body.descriptor)) {
+        }
+        var syntaxErrors = projectAwesome.validateQuizDescriptor(req.body.descriptor);
+        if (syntaxErrors.length > 0) {
             res.status(400).end();
             return;
         }
 
         models.User.findOne({ where: {awesome_id: req.user.awesome_id} }).then(function(user) {
             if (user) {
-                user.createQuizDescriptor({descriptor: req.body.descriptor}).then(function(qd) {
+                var params = {};
+                params.descriptor = req.body.descriptor;
+                if (req.body.title && typeof req.body.title === 'string')
+                    params.title = req.body.title;
+
+
+                user.createQuizDescriptor(params).then(function(qd) {
                     res.json(qd);
                 }).catch(function(error) {
                     res.status(500).end();
@@ -79,8 +87,9 @@ module.exports = function(app) {
                 emptyRequest = false;
             }
             if ('descriptor' in req.body) {
-                if (projectAwesome.isValidQuizDescriptor(req.body.descriptor) !== true) {
-                    console.log("Quiz descriptor is not valid.");
+
+                var syntaxErrors = projectAwesome.validateQuizDescriptor(req.body.descriptor);
+                if (syntaxErrors.length > 0) {
                     res.status(400).end();
                     return;
                 }
