@@ -281,6 +281,33 @@ describe('QuizDescriptor API', function() {
                         });
                     });
                 });
+                describe('updating title', function() {
+                    describe('when title is not a string', function() {
+                        it('should respond with 400 Bad Request', function(done) {
+                            request(app)
+                            .put('/api/qd/'+myQD.id)
+                            .send({title:true})
+                            .expect(400)
+                            .end(function(err, res) {
+                                if (err) return done(err);
+                                done();
+                            });
+                        });
+                    });
+                    describe('when setting to "Sample Update Title"', function() {
+                        it('should respond with 200 and with updated qd', function(done) {
+                            request(app)
+                            .put('/api/qd/'+myQD.id)
+                            .send({title:"Sample Update Title"})
+                            .expect(200)
+                            .end(function(err, res) {
+                                if (err) return done(err);
+                                expect(res.body.title).to.equal("Sample Update Title");
+                                done();
+                            });
+                        });
+                    });
+                });
             });
 
         });
@@ -345,6 +372,17 @@ describe('QuizDescriptor API', function() {
                 request(app)
                 .post('/api/qd')
                 .send({descriptor: '{something: "blah"}'})
+                .expect(400)
+                .end(function(err, res) {
+                    if (err) return done(err);
+                    done();
+                });
+            });
+
+            it('should return 400 Bad Request if the title is not a string', function(done) {
+                request(app)
+                .post('/api/qd')
+                .send({descriptor: validDescriptor, title:true})
                 .expect(400)
                 .end(function(err, res) {
                     if (err) return done(err);
