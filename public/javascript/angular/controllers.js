@@ -29,7 +29,7 @@ awesomeApp.controller("QuizDescriptorCtrl", ['qd', 'AuthService', 'Flash', '$mod
 
     vm.saveSettings = function() {
         vm.waitingForResponse = true;
-        vm.qd.customPUT({ hidden: vm.qd.hidden }).then(function(newQD) {
+        vm.qd.customPUT({ hidden: vm.qd.hidden, title: vm.qd.title }).then(function(newQD) {
             vm.waitingForResponse = false;
             vm.qd = newQD;
             Flash.create('success', '<strong> Quiz Descriptor Saved:</strong>  id = ' + qd.id + '.', 'custom-class');
