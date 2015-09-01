@@ -24,7 +24,7 @@ awesomeApp.controller("QuizDescriptorCtrl", ['qd', 'AuthService', 'Flash', '$mod
     vm.questionTypes = PAQuestions.getQuestionTypes();
 
     vm.addNewQuestion = function(questionType) {
-        vm.qd.descriptor.quiz.unshift(PAQuestions.getTemplate(questionType));
+        vm.qd.descriptor.questions.unshift(PAQuestions.getTemplate(questionType));
     }
 
     vm.saveSettings = function() {
@@ -93,7 +93,7 @@ awesomeApp.controller("QuizDescriptorCtrl", ['qd', 'AuthService', 'Flash', '$mod
             size: 'lg',
             resolve: {
                 question: function () {
-                    return angular.copy(vm.qd.descriptor.quiz[i]);
+                    return angular.copy(vm.qd.descriptor.questions[i]);
                 },
                 state: function() {
                     return { published: vm.qd.published };
@@ -101,7 +101,7 @@ awesomeApp.controller("QuizDescriptorCtrl", ['qd', 'AuthService', 'Flash', '$mod
             }
         });
         modalInstance.result.then(function (question) {
-            vm.qd.descriptor.quiz[i] = question;
+            vm.qd.descriptor.questions[i] = question;
         }, function () {
             //$log.info('Modal dismissed at: ' + new Date());
         });
@@ -208,7 +208,8 @@ awesomeApp.controller('QuestionExportCtrl', ['PAQuestions', 'SeedGenerator', '$w
 
 awesomeApp.controller('QuizCtrl', [ 'quiz', '$stateParams', function(quiz, $stateParams) {
     var vm = this;
-    vm.quiz = quiz;
+    vm.quiz = quiz.quiz;
+    vm.title = quiz.title;
     vm.seed = $stateParams.seed;
     vm.showQuestions = true;
     vm.showKey = false;
@@ -271,17 +272,9 @@ awesomeApp.controller('QuizListCtrl', [ 'qds', 'Flash', 'Restangular', function(
     var vm = this;
     vm.quizzes = qds;
     vm.quizDescriptorTitle = "";
-
-    function createDescriptor(title) {
-        return {
-            "quiz": [{repeat:1,question:"changeOfBase"}],
-            "title": title,
-            "version": "0.1"
-        }
-    }
-
+    
     vm.addQuizDescriptor = function() {
-        Restangular.all('qd').post({descriptor: createDescriptor(vm.quizDescriptorTitle) })
+        Restangular.all('qd').post({descriptor: { questions:[], version:"0.1" }, title: vm.quizDescriptorTitle })
         .then(function(qd) {
             Flash.create('success', '<strong> Quiz Descriptor Saved:</strong>  id = ' + qd.id + '.', 'custom-class');
             vm.quizzes.push(qd);
