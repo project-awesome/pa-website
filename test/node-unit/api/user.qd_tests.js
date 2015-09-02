@@ -50,11 +50,11 @@ describe('User.QuizDescriptor API', function() {
 		    		// create one qd belonging to testUser
 		    		// create one qd not belonging to testUser
 		    		models.QuizDescriptor.destroy({ where: { UserAwesomeId: testUser.awesome_id} }).then(function() {
-		    			testUser.createQuizDescriptor({ descriptor: utils.getSampleQuizDescriptor("Test User's First QD") }).then(function(res) {
+		    			testUser.createQuizDescriptor({ descriptor: utils.getSampleQuizDescriptor() }).then(function(res) {
 		    				qds.push(res);
-			    			testUser.createQuizDescriptor({ descriptor: utils.getSampleQuizDescriptor("Test User's Second QD") }).then(function(res2) {
+			    			testUser.createQuizDescriptor({ descriptor: utils.getSampleQuizDescriptor() }).then(function(res2) {
 			    				qds.push(res2);
-			    				models.QuizDescriptor.create({descriptor: utils.getSampleQuizDescriptor("Not Test User's")}).then(function() {
+			    				models.QuizDescriptor.create({descriptor: utils.getSampleQuizDescriptor()}).then(function() {
 			    					done();
 			    				});
 			    			});
@@ -113,22 +113,22 @@ describe('User.QuizDescriptor API', function() {
 
 	            before(function(done) {
                     testUser.createQuizDescriptor({
-                        descriptor: utils.getSampleQuizDescriptor('Sample QD Title for (t,t)'),
+                        descriptor: utils.getSampleQuizDescriptor(),
                         published: true,
                         hidden: true
                     }).then(function(qd) {
                         testUser.createQuizDescriptor({
-                            descriptor: utils.getSampleQuizDescriptor('Sample QD Title for (t,f)'),
+                            descriptor: utils.getSampleQuizDescriptor(),
                             published: true,
                             hidden: false
                         }).then(function(qd) {
                             testUser.createQuizDescriptor({
-                                descriptor: utils.getSampleQuizDescriptor('Sample QD Title for (f,t)'),
+                                descriptor: utils.getSampleQuizDescriptor(),
                                 published: false,
                                 hidden: true
                             }).then(function(qd) {
                                 testUser.createQuizDescriptor({
-                                    descriptor: utils.getSampleQuizDescriptor('Sample QD Title for (f,f)'),
+                                    descriptor: utils.getSampleQuizDescriptor(),
                                     published: false,
                                     hidden: false
                                 }).then(function(qd) {

@@ -65,10 +65,22 @@ awesomeApp.factory('PAQuestions', [function() {
                                 items: {
                                     type: "object",
                                     properties: {
-                                        fromRad: { type: "integer", title: "From Radix", minimum: 2, maximum: 36, required:true },
-                                        toRad: { type: "integer", title: "To Radix", minimum: 2, maximum: 36, required:true },
-                                        minVal: { type: "integer", title: "Minium Value", minimum: 0, required:true },
-                                        maxVal: { type: "integer", title: "Maximum Value", minimum: 0, required:true }
+                                        radix: {
+                                            type: "object",
+                                            title: "Radix",
+                                            properties: {
+                                                from: { type: "integer", title: "From", minimum: 2, maximum: 36, required: true },
+                                                to: { type: "integer", title: "To", minimum: 2, maximum: 36, required: true }
+                                            }
+                                        },
+                                        range: {
+                                            type: "object",
+                                            title: "Range",
+                                            properties: {
+                                                min: { type: "integer", title: "Minimum", minimum: 0, required: true },
+                                                max: { type: "integer", title: "Maximum", minimum: 0, required: true }
+                                            }
+                                        }
                                     }
                                 }
                             }

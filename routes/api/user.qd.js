@@ -1,5 +1,4 @@
 var models = require('../../models');
-var projectAwesome = require("project-awesome");
 module.exports = function(app) {
 
     app.get('/api/user/:awesome_id/qd', function(req, res) {

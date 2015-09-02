@@ -162,13 +162,13 @@ describe('Angular Controllers', function() {
 				});
 
 				it ('should be called once', function() {
-					controller.qd.descriptor.quiz = ["q1", "q2", "q3"];
+					controller.qd.descriptor.questions = ["q1", "q2", "q3"];
 					controller.openQuestionSettings(1);
 					expect(spy.calledOnce).to.be.true;
 				});
 
 				it ('should be called with question resolved to the question corresponding to index i', function() {
-					controller.qd.descriptor.quiz = ["q1", "q2", "q3"];
+					controller.qd.descriptor.questions = ["q1", "q2", "q3"];
 					controller.openQuestionSettings(1);
 					expect(spy.calledOnce).to.be.true;
 					expect(spy.args[0][0].resolve.question()).to.equal('q2');
@@ -836,12 +836,14 @@ describe('Angular Controllers', function() {
 
 	describe('QuizCtrl', function() {
 		var QuizMock = {
-			"title":"First Fixture Example Quiz",
-			"questions":[{
-		        "question": "Convert 11011 from base 2 to octal.",
-		        "answer": "33",
-		        "format": "input"
-		    }]
+			title:"First Fixture Example Quiz",
+			quiz: {
+				"questions":[{
+			        "question": "Convert 11011 from base 2 to octal.",
+			        "answer": "33",
+			        "format": "input"
+			    }]
+			}
 		};
 		var StateParamsMock = {
 			id: 1,
@@ -899,7 +901,7 @@ describe('Angular Controllers', function() {
 			});
 
 			it('should mark a question as incorrect if the userAnswer is not defined', function() {
-				QuizMock.questions = [
+				QuizMock.quiz.questions = [
 					{
 				        "question": "Convert 11011 from base 2 to octal.",
 				        "answer": "33"
@@ -910,7 +912,7 @@ describe('Angular Controllers', function() {
 			});
 			
 			it('should mark a question as incorrect if the userAnswer does not match the answer property', function() {
-				QuizMock.questions = [
+				QuizMock.quiz.questions = [
 					{
 				        "question": "Convert 11011 from base 2 to octal.",
 				        "answer": "33",
@@ -922,7 +924,7 @@ describe('Angular Controllers', function() {
 			});
 			
 			it('should mark a question as correct if the userAnswer matches the answer property', function() {
-				QuizMock.questions = [
+				QuizMock.quiz.questions = [
 					{
 				        "question": "Convert 11011 from base 2 to octal.",
 				        "answer": "33",
@@ -944,7 +946,7 @@ describe('Angular Controllers', function() {
 		describe('quiz', function() {
 
 			it('should have set quiz to the quiz service result', function() {
-				expect(controller.quiz).to.eql(QuizMock);
+				expect(controller.quiz).to.eql(QuizMock.quiz);
 			});
 
 		});

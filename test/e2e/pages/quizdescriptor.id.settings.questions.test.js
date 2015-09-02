@@ -58,7 +58,7 @@ describe('/quizdescriptor/:id/settings/general', function() {
                     notMyQD = res1;
                     utils.authenticateTestUser().then(function(user) {
                         testUser = user;
-                        testUser.createQuizDescriptor( { descriptor: utils.getSampleQuizDescriptor("Test User's QD") } ).then(function(res2) {
+                        testUser.createQuizDescriptor( { descriptor: utils.getSampleQuizDescriptor() } ).then(function(res2) {
                             myQD = res2;
                             done();
                         });

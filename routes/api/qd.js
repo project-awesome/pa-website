@@ -11,17 +11,40 @@ module.exports = function(app) {
         if (!req.isAuthenticated()) {
             res.status(403).end();
             return;
-        } else if (!req.body.descriptor) {
-            res.status(400).end();
-            return;
-        } else if (!projectAwesome.isValidQuizDescriptor(req.body.descriptor)) {
+        }
+
+        if (typeof req.body !== 'object') {
+            console.log("req.body is not an object.");
             res.status(400).end();
             return;
         }
 
+        if (!req.body.descriptor) {
+            res.status(400).end();
+            return;
+        }
+
+        var syntaxErrors = projectAwesome.validateQuizDescriptor(req.body.descriptor);
+        var params = {};
+        if (syntaxErrors.length > 0) {
+            res.status(400).end();
+            return;
+        } else {
+            params.descriptor = req.body.descriptor;
+        }
+
+        if ('title' in req.body) {
+            if (typeof req.body.title !== 'string') {
+                res.status(400).end();
+                return;
+            } else {
+                params.title = req.body.title;
+            }
+        }
+
         models.User.findOne({ where: {awesome_id: req.user.awesome_id} }).then(function(user) {
             if (user) {
-                user.createQuizDescriptor({descriptor: req.body.descriptor}).then(function(qd) {
+                user.createQuizDescriptor(params).then(function(qd) {
                     res.json(qd);
                 }).catch(function(error) {
                     res.status(500).end();
@@ -79,8 +102,9 @@ module.exports = function(app) {
                 emptyRequest = false;
             }
             if ('descriptor' in req.body) {
-                if (projectAwesome.isValidQuizDescriptor(req.body.descriptor) !== true) {
-                    console.log("Quiz descriptor is not valid.");
+
+                var syntaxErrors = projectAwesome.validateQuizDescriptor(req.body.descriptor);
+                if (syntaxErrors.length > 0) {
                     res.status(400).end();
                     return;
                 }
@@ -92,6 +116,18 @@ module.exports = function(app) {
                 updateRequest.descriptor = req.body.descriptor;
                 emptyRequest = false;
             }
+
+
+            if ('title' in req.body) {
+                if (typeof req.body.title !== 'string') {
+                    res.status(400).end();
+                    return;
+                } else {
+                    updateRequest.title = req.body.title;
+                }
+                emptyRequest = false;
+            }
+
             if (emptyRequest) {
                 res.status(400).end();
                 return;

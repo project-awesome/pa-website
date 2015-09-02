@@ -53,7 +53,7 @@ describe('/quizdescriptor/:id', function() {
                 expect(browser.getCurrentUrl()).to.eventually.include('/quizdescriptor/' + qd.id);
             });
             it('should display the quiz descriptor', function() {
-                expect(element(by.id('qd-title')).getText()).to.eventually.equal(qd.descriptor.title);
+                expect(element(by.id('qd-title')).getText()).to.eventually.equal(qd.title);
             });
         });
     });
@@ -66,7 +66,7 @@ describe('/quizdescriptor/:id', function() {
                     notMyQD = res1;
                     utils.authenticateTestUser().then(function(user) {
                         testUser = user;
-                        testUser.createQuizDescriptor( { descriptor: utils.getSampleQuizDescriptor("Test User's QD") } ).then(function(res2) {
+                        testUser.createQuizDescriptor( { descriptor: utils.getSampleQuizDescriptor() } ).then(function(res2) {
                             myQD = res2;
                             done();
                         });

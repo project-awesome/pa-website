@@ -1,6 +1,6 @@
 'use strict';
 
-var awesomeApp = angular.module('awesomeApp', ['schemaForm', 'ngCookies', 'ui.router', 'ui.bootstrap', 'flash', 'restangular', 'ngAnimate', 'ui.tree']);
+var awesomeApp = angular.module('awesomeApp', ['schemaForm', 'ngMessages', 'ngCookies', 'ui.router', 'ui.bootstrap', 'flash', 'restangular', 'ngAnimate', 'ui.tree']);
 awesomeApp.config(['$stateProvider', '$urlRouterProvider', '$locationProvider', 'RestangularProvider', function($stateProvider, $urlRouterProvider, $locationProvider, RestangularProvider) {
     
     RestangularProvider.setBaseUrl('/api');

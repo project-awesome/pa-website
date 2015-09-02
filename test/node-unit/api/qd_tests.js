@@ -16,7 +16,7 @@ describe('QuizDescriptor API', function() {
             var testUser, qd;
             before(function(done) {
                 utils.resetEnvironment(app).then(function() {
-                    models.QuizDescriptor.create({descriptor: utils.getSampleQuizDescriptor("Some QD Title")}).then(function(res) {
+                    models.QuizDescriptor.create({descriptor: utils.getSampleQuizDescriptor()}).then(function(res) {
                         qd = res;
                         done();
                     });
@@ -35,7 +35,7 @@ describe('QuizDescriptor API', function() {
             it('should respond with error 403 even when its a bad request', function(done) {
                 request(app)
                 .put('/api/qd/'+qd.id)
-                .send({ descriptor: { quiz : null } })
+                .send({ descriptor: { questions : null } })
                 .expect(403)
                 .end(function(err, res) {
                     if (err) return done(err);
@@ -51,7 +51,7 @@ describe('QuizDescriptor API', function() {
                         notMyQD = res1;
                         utils.authenticateTestUser().then(function(user) {
                             testUser = user;
-                            testUser.createQuizDescriptor( { descriptor: utils.getSampleQuizDescriptor("Test User's QD") } ).then(function(res2) {
+                            testUser.createQuizDescriptor( { descriptor: utils.getSampleQuizDescriptor() } ).then(function(res2) {
                                 myQD = res2;
                                 done();
                             });
@@ -77,7 +77,7 @@ describe('QuizDescriptor API', function() {
                 it('should respond with error 403 even when its a bad request', function(done) {
                     request(app)
                     .put('/api/qd/'+notMyQD.id)
-                    .send({ descriptor: { quiz : null } })
+                    .send({ descriptor: { questions : null } })
                     .expect(403)
                     .end(function(err, res) {
                         if (err) return done(err);
@@ -100,7 +100,7 @@ describe('QuizDescriptor API', function() {
                 it('should respond with error 404 even when its a bad request', function(done) {
                     request(app)
                     .put('/api/qd/'+(myQD.id+10000))
-                    .send({ descriptor: { quiz : null } })
+                    .send({ descriptor: { questions : null } })
                     .expect(403)
                     .end(function(err, res) {
                         if (err) return done(err);
@@ -163,7 +163,7 @@ describe('QuizDescriptor API', function() {
                             it('should respond with error 400', function(done) {
                                 request(app)
                                 .put('/api/qd/'+myQD.id)
-                                .send({descriptor:utils.getSampleQuizDescriptor('New Descriptor')})
+                                .send({descriptor:utils.getSampleQuizDescriptor()})
                                 .expect(400)
                                 .end(function(err, res) {
                                     if (err) return done(err);
@@ -178,7 +178,7 @@ describe('QuizDescriptor API', function() {
                                 });
                             });
                             it('should respond with 200 and with body where qd.descriptor has been updated', function(done) {
-                                var newDescriptor = utils.getSampleQuizDescriptor('New Descriptor');
+                                var newDescriptor = utils.getSampleQuizDescriptor();
                                 request(app)
                                 .put('/api/qd/'+myQD.id)
                                 .send({descriptor:newDescriptor})
@@ -281,43 +281,34 @@ describe('QuizDescriptor API', function() {
                         });
                     });
                 });
-            });
-            /*
-            it('should return 400 Bad Request if missing descriptor parameter', function(done) {
-                request(app)
-                .post('/api/qd')
-                .expect(400)
-                .end(function(err, res) {
-                    if (err) return done(err);
-                    done();
+                describe('updating title', function() {
+                    describe('when title is not a string', function() {
+                        it('should respond with 400 Bad Request', function(done) {
+                            request(app)
+                            .put('/api/qd/'+myQD.id)
+                            .send({title:true})
+                            .expect(400)
+                            .end(function(err, res) {
+                                if (err) return done(err);
+                                done();
+                            });
+                        });
+                    });
+                    describe('when setting to "Sample Update Title"', function() {
+                        it('should respond with 200 and with updated qd', function(done) {
+                            request(app)
+                            .put('/api/qd/'+myQD.id)
+                            .send({title:"Sample Update Title"})
+                            .expect(200)
+                            .end(function(err, res) {
+                                if (err) return done(err);
+                                expect(res.body.title).to.equal("Sample Update Title");
+                                done();
+                            });
+                        });
+                    });
                 });
             });
-
-            it('should respond with 400 Bad Request if the descriptor syntax is invalid', function(done) {
-                request(app)
-                .post('/api/qd')
-                .send({descriptor: '{something: "blah"}'})
-                .expect(400)
-                .end(function(err, res) {
-                    if (err) return done(err);
-                    done();
-                });
-            });
-
-            it('should give status 200 and return json { descriptor: {...} } if successful', function(done) {
-
-                request(app)
-                .post('/api/qd')
-                .send({descriptor: validDescriptor})
-                .expect(200)
-                .end(function(err, res) {
-                    if (err) return done(err);
-                    expect(res.body.descriptor).to.eql(validDescriptor);
-                    expect(res.body.id).to.be.a('number');
-                    done();
-                });
-            });
-            */
 
         });
 
@@ -388,15 +379,27 @@ describe('QuizDescriptor API', function() {
                 });
             });
 
-            it('should give status 200 and return json { descriptor: {...} } if successful', function(done) {
+            it('should return 400 Bad Request if the title is not a string', function(done) {
+                request(app)
+                .post('/api/qd')
+                .send({descriptor: validDescriptor, title:true})
+                .expect(400)
+                .end(function(err, res) {
+                    if (err) return done(err);
+                    done();
+                });
+            });
+
+            it('should give status 200 and return json { descriptor: {...}, title: "..." } if successful', function(done) {
 
                 request(app)
                 .post('/api/qd')
-                .send({descriptor: validDescriptor})
+                .send({descriptor: validDescriptor, title: "My Title"})
                 .expect(200)
                 .end(function(err, res) {
                     if (err) return done(err);
                     expect(res.body.descriptor).to.eql(validDescriptor);
+                    expect(res.body.title).to.equal('My Title');
                     expect(res.body.id).to.be.a('number');
                     done();
                 });
@@ -512,22 +515,22 @@ describe('QuizDescriptor API', function() {
             before(function(done) {
                 utils.resetEnvironment(app).then(function() {
                     models.QuizDescriptor.create({
-                        descriptor: utils.getSampleQuizDescriptor('Sample QD Title for (t,t)'),
+                        descriptor: utils.getSampleQuizDescriptor(),
                         published: true,
                         hidden: true
                     }).then(function(qd) {
                         models.QuizDescriptor.create({
-                            descriptor: utils.getSampleQuizDescriptor('Sample QD Title for (t,f)'),
+                            descriptor: utils.getSampleQuizDescriptor(),
                             published: true,
                             hidden: false
                         }).then(function(qd) {
                             models.QuizDescriptor.create({
-                                descriptor: utils.getSampleQuizDescriptor('Sample QD Title for (f,t)'),
+                                descriptor: utils.getSampleQuizDescriptor(),
                                 published: false,
                                 hidden: true
                             }).then(function(qd) {
                                 models.QuizDescriptor.create({
-                                    descriptor: utils.getSampleQuizDescriptor('Sample QD Title for (f,f)'),
+                                    descriptor: utils.getSampleQuizDescriptor(),
                                     published: false,
                                     hidden: false
                                 }).then(function(qd) {
