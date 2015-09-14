@@ -1,0 +1,45 @@
+<div>
+
+	<h1>Quiz Settings</h1>
+
+	<hr>
+
+	<div>
+		<form name="qdForm">
+			<div class="form-group" ng-class="{'has-error': qdForm.title.$error.required }">
+				<label>Title</label>
+				<input id="quiz-title-input" name="title" type="text" class="form-control" ng-model="qdCtrl.qd.title" placeholder="Title" required>
+				<div ng-messages="qdForm.title.$error" class="help-block">
+					<div ng-message="required">Your quiz needs a title.</div>
+				</div>
+			</div>
+			<div class="form-group">
+					<label>Hidden</label>
+					<div>
+			    		<input type="checkbox" ng-model="qdCtrl.qd.hidden" bootstrap-switch >
+			    	</div>
+			</div>
+			<div>
+				<br>
+				<br>
+				<div>
+					<button ng-disabled="qdCtrl.waitingForResponse || qdForm.$pristine || qdForm.$invalid" ng-click="qdForm.$setPristine(); qdCtrl.saveSettings();" type="submit" class="btn btn-success btn-lg">
+						Save Changes
+					</button>
+				</div>
+				<div>
+					<br>
+				</div>
+				<div ng-hide="qdCtrl.qd.published">
+					<button ng-disabled="qdCtrl.waitingForResponse || !qdForm.$pristine || qdForm.$invalid" ng-click="qdForm.$setPristine(); qdCtrl.publishQuizConfirm();" type="submit" class="btn btn-danger btn-lg">
+						Publish Quiz
+					</button>
+				</div>
+			</div>
+		</form>
+
+
+
+	</div>
+
+</div>

@@ -12,14 +12,12 @@ describe('/quiz/:id', function() {
 	var qd;
 
     before(function(done) {
-        models.sequelize.sync({ force: true }).then(function () {
-            server = app.listen(app.get('port'), function() {
-	            models.sequelize.sync({ force: true }).then(function () {
-	                utils.insertQuizDescriptor(models, 'Example Quiz Descriptor Title').then(function(res) {
-	                    qd = res;
-	                    done();
-	                });
-	            });
+        server = app.listen(app.get('port'), function() {
+            models.sequelize.sync({ force: true }).then(function () {
+                utils.insertQuizDescriptor(models, 'Example Quiz Descriptor Title').then(function(res) {
+                    qd = res;
+                    done();
+                });
             });
         });
     });
@@ -49,9 +47,8 @@ describe('/quiz/:id', function() {
         		browser.get('/quiz/'+qd.id);
         		done();
         	});
-	        it('should display the quiz title on the page', function(done) {
-	            expect(element(by.binding('quizStarter.qd.descriptor.title')).getText()).to.eventually.equal(qd.descriptor.title);
-	            done();
+	        it('should display the quiz title on the page', function() {
+	            expect(element(by.binding('quizStarter.qd.title')).getText()).to.eventually.equal(qd.title);
 	        });
         });
 
@@ -62,17 +59,15 @@ describe('/quiz/:id', function() {
                 done();
             });
 
-            it('should go to /quiz/:id/:seed when the user clicks the Start Quiz button', function(done) {
+            it('should go to /quiz/:id/:seed when the user clicks the Start Quiz button', function() {
                 element(by.buttonText('Start Quiz')).click();
                 expect(browser.getCurrentUrl()).to.eventually.include(browser.baseUrl + '/quiz/' + qd.id + '/');
-                done();
             });
 
-            it('should go to /quiz/:id/:seed with seed corresponding to the valid seed input', function(done) {
+            it('should go to /quiz/:id/:seed with seed corresponding to the valid seed input', function() {
                 element(by.model('quizStarter.seed')).sendKeys('abcd4444');
                 element(by.buttonText('Start Quiz')).click();
                 expect(browser.getCurrentUrl()).to.eventually.include(browser.baseUrl + '/quiz/' + qd.id + '/abcd4444');
-                done();
             });
             
         });

@@ -25,6 +25,120 @@ describe('QuizDescriptor', function() {
       });
     });
   });
+  describe('title field', function() {
+    describe('default value when unspecified', function() {
+      var res;
+      before(function(done) {
+        models.QuizDescriptor.create({descriptor: validDescriptor}).then(function(qd) {
+          res = qd;
+          done();
+        });
+      });
+      after(function(done) {
+        res.destroy().then(function() {
+          done();
+        });
+      });
+      it('should be set to false', function(done) {
+        expect(res.title).to.equal('');
+        done();
+      });
+    });
+    describe('when set to "Sample Title"', function() {
+      var res;
+      before(function(done) {
+        models.QuizDescriptor.create({descriptor: validDescriptor, title: 'Sample Title'}).then(function(qd) {
+          res = qd;
+          done();
+        });
+      });
+      after(function(done) {
+        res.destroy().then(function() {
+          done();
+        });
+      });
+      it('should be set to "Sample Title"', function(done) {
+        expect(res.title).to.equal('Sample Title');
+        done();
+      });
+    });
+  });
+  describe('published field', function() {
+    describe('default value when unspecified', function() {
+      var res;
+      before(function(done) {
+        models.QuizDescriptor.create({descriptor: validDescriptor}).then(function(qd) {
+          res = qd;
+          done();
+        });
+      });
+      after(function(done) {
+        res.destroy().then(function() {
+          done();
+        });
+      });
+      it('should be set to false', function(done) {
+        expect(res.hidden).to.be.false;
+        done();
+      });
+    });
+    describe('when specified as true', function() {
+      var res;
+      before(function(done) {
+        models.QuizDescriptor.create({descriptor: validDescriptor, published: true}).then(function(qd) {
+          res = qd;
+          done();
+        });
+      });
+      after(function(done) {
+        res.destroy().then(function() {
+          done();
+        });
+      });
+      it('should be set to true', function(done) {
+        expect(res.published).to.be.true;
+        done();
+      });
+    });
+  });
+  describe('hidden field', function() {
+    describe('default value when unspecified', function() {
+      var res;
+      before(function(done) {
+        models.QuizDescriptor.create({descriptor: validDescriptor}).then(function(qd) {
+          res = qd;
+          done();
+        });
+      });
+      after(function(done) {
+        res.destroy().then(function() {
+          done();
+        });
+      });
+      it('should be set to false', function(done) {
+        expect(res.hidden).to.be.false;
+        done();
+      });
+    });
+    describe('when specified as true', function() {
+      var res;
+      before(function(done) {
+        models.QuizDescriptor.create({descriptor: validDescriptor, hidden: true}).then(function(qd) {
+          res = qd;
+          done();
+        });
+      });
+      after(function(done) {
+        res.destroy().then(function() {
+          done();
+        });
+      });
+      it('should be set to true', function(done) {
+        expect(res.hidden).to.be.true;
+        done();
+      });
+    });
+  });
 
   it('shouldcreate a quiz descriptor', function(done){
     models.QuizDescriptor.create({descriptor: validDescriptor}).then(function(qd) {

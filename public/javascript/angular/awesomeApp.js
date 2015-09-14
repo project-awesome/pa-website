@@ -1,6 +1,6 @@
 'use strict';
 
-var awesomeApp = angular.module('awesomeApp', ['ngCookies', 'ui.router', 'ui.bootstrap', 'flash', 'restangular', 'ngAnimate']);
+var awesomeApp = angular.module('awesomeApp', ['schemaForm', 'ngMessages', 'ngCookies', 'ui.router', 'ui.bootstrap', 'flash', 'restangular', 'ngAnimate', 'ui.tree']);
 awesomeApp.config(['$stateProvider', '$urlRouterProvider', '$locationProvider', 'RestangularProvider', function($stateProvider, $urlRouterProvider, $locationProvider, RestangularProvider) {
     
     RestangularProvider.setBaseUrl('/api');
@@ -16,11 +16,11 @@ awesomeApp.config(['$stateProvider', '$urlRouterProvider', '$locationProvider', 
 	.state('student', {
 		url: '/student',
 		templateUrl: 'partials/student.html',
-		controller: 'QuizDescriptorCtrl',
+		controller: 'QuizListCtrl',
 		controllerAs: 'quizDescriptors',
 		resolve: {
 			qds: ['Restangular', function(Restangular) {
-				return Restangular.all('qd').getList();
+				return Restangular.all('qd').getList({ hidden: false, published: true });
 			}]
 		}
 	})
@@ -30,17 +30,27 @@ awesomeApp.config(['$stateProvider', '$urlRouterProvider', '$locationProvider', 
 		controller: 'InstructorCtrl',
 		controllerAs: 'instructorCtrl'
 	})
-	.state('instructor.quizdescriptors', {
-		url: '/quizdescriptors',
-		templateUrl: 'partials/instructor.quizdescriptors.html',
-		controller: 'QuizDescriptorCtrl',
+	.state('instructor.allquizdescriptors', {
+		url: '/allquizdescriptors',
+		templateUrl: 'partials/instructor.allquizdescriptors.html',
+		controller: 'QuizListCtrl',
 		controllerAs: 'quizDescriptors',
 		resolve: {
 			qds: ['Restangular', function(Restangular) {
-				return Restangular.all('qd').getList();
+				return Restangular.all('qd').getList({ hidden: false, published: true });
 			}]
 		}
-
+	})
+	.state('instructor.myquizdescriptors', {
+		url: '/myquizdescriptors',
+		templateUrl: 'partials/instructor.quizdescriptors.html',
+		controller: 'QuizListCtrl',
+		controllerAs: 'quizDescriptors',
+		resolve: {
+			qds: ['Restangular', 'AuthService', function(Restangular, AuthService) {
+				return Restangular.one('user', AuthService.getAwesomeId()).getList('qd');
+			}]
+		}
 	})
 	.state('instructor.export', {
 		url: '/export',
@@ -69,7 +79,7 @@ awesomeApp.config(['$stateProvider', '$urlRouterProvider', '$locationProvider', 
 	})
 	.state('quizoptions', {
 		url: '/quiz/:id',
-		templateUrl: 'partials/quizdescriptor.html',
+		templateUrl: 'partials/quizoptions.html',
 		controller: 'QuizStartCtrl',
 		controllerAs: 'quizStarter',
 		resolve: {
@@ -89,14 +99,61 @@ awesomeApp.config(['$stateProvider', '$urlRouterProvider', '$locationProvider', 
 			}]
 		}
 	})
-	.state('showpage', {
-		url: '/showpage/:id',
-		templateUrl: 'partials/showpage.html',
-		controller: 'ShowDescriptorCtrl',
+	.state('quizdescriptor', {
+		url: '/quizdescriptor/:id',
+		templateUrl: 'partials/quizdescriptor.html',
+		controller: 'QuizDescriptorCtrl',
 		controllerAs: 'qdCtrl',
 		resolve: {
 			qd: ['Restangular', '$stateParams', function(Restangular, $stateParams) {
 				return Restangular.one('qd', $stateParams.id).get();
+			}]
+		}
+	})
+    .state('quizsettings', {
+        abstract: true,
+        url: '/quizdescriptor/:id/settings',
+        templateUrl: 'partials/quizsettings.html',
+        controller: 'NavigationCtrl',
+        controllerAs: 'navCtrl',
+        resolve: {
+        	tabs: function() {
+        		return [
+			        { label: "General", state: "quizsettings.general"},
+			        { label: "Questions", state: "quizsettings.questions"}
+			    ];
+        	}
+        }
+    })
+	.state('quizsettings.general', {
+		url: '/general',
+		templateUrl: 'partials/quizsettings.general.html',
+		controller: 'QuizDescriptorCtrl',
+		controllerAs: 'qdCtrl',
+		resolve: {
+			qd: ['Restangular', 'AuthService', '$stateParams', function(Restangular, AuthService, $stateParams) {
+				return Restangular.one('qd', $stateParams.id).get().then(function(qd) {
+					if (qd.UserAwesomeId != AuthService.getAwesomeId())
+						throw { status: 404 };
+					else
+						return qd;
+				});
+			}]
+		}
+	})
+	.state('quizsettings.questions', {
+		url: '/questions',
+		templateUrl: 'partials/quizsettings.questions.html',
+		controller: 'QuizDescriptorCtrl',
+		controllerAs: 'qdCtrl',
+		resolve: {
+			qd: ['Restangular', 'AuthService', '$stateParams', function(Restangular, AuthService, $stateParams) {
+				return Restangular.one('qd', $stateParams.id).get().then(function(qd) {
+					if (qd.UserAwesomeId != AuthService.getAwesomeId())
+						throw { status: 404 };
+					else
+						return qd;
+				});
 			}]
 		}
 	})
@@ -112,7 +169,6 @@ awesomeApp.config(['$stateProvider', '$urlRouterProvider', '$locationProvider', 
 	});
 }])
 .run(['AuthService', 'Flash', '$rootScope', '$state', '$window', function(AuthService, Flash, $rootScope, $state, $window) {
-
 	$rootScope.$on('$stateChangeError', function(event, toState, toParams, fromState, fromParams, error) {
 		if (error.status == 404) {
 			event.preventDefault();
@@ -122,10 +178,9 @@ awesomeApp.config(['$stateProvider', '$urlRouterProvider', '$locationProvider', 
 
 	$rootScope.$on( "$stateChangeStart", function(event, toState, toParams, fromState, fromParams) {
 		Flash.dismiss();
-		var requiresAuth = ['instructor.quizdescriptors', 'usersettings'];
+		var requiresAuth = ['instructor.myquizdescriptors', 'usersettings', 'quizsettings.general', 'quizsettings.questions'];
 		var requiresUnauth = ['login'];
 		var authenticated = AuthService.isAuthenticated();
-		//console.log(toState);
 		if (!authenticated) {
 			// redirect user to login page if they try to access user settings page
 			if (requiresAuth.indexOf(toState.name) != -1) {
@@ -134,7 +189,6 @@ awesomeApp.config(['$stateProvider', '$urlRouterProvider', '$locationProvider', 
 			}
 
 		} else {
-
 			// redirect user to preferred page if they try to access login page
 			if (requiresUnauth.indexOf(toState.name) != -1) {
 				event.preventDefault();

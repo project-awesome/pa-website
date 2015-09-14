@@ -21,11 +21,11 @@
     "passport-stub": "^1.0.1",
     "pg": "^4.4.0",
     "pg-hstore": "^2.3.2",
+    "project-awesome": "1.3.0",
     "request": "^2.58.0",
     "sequelize": "^3.3.2",
-    "project-awesome": "1.2.0",
-    "underscore": "^1.8.3",
-    "serve-favicon": "^2.3.0"
+    "serve-favicon": "^2.3.0",
+    "underscore": "^1.8.3"
   },
   "engines": {
     "node": "0.12.2"
@@ -47,6 +47,7 @@
     "chai-as-promised": "^5.1.0",
     "karma": "0.13.3",
     "karma-chai": "^0.1.0",
+    "karma-chai-sinon": "^0.1.5",
     "karma-chrome-launcher": "^0.2.0",
     "karma-mocha": "^0.2.0",
     "karma-phantomjs-launcher": "^0.2.0",

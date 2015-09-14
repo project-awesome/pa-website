@@ -1,0 +1,15 @@
+<div class="modal-header">
+    <h3 class="modal-title">{{ questionCtrl.model.question }}</h3>
+    <hr>
+      <div class="row">
+        <div class="col-sm-12">
+          <div>
+            <form name="questionForm" sf-schema="questionCtrl.schema" sf-form="questionCtrl.form" sf-model="questionCtrl.model" sf-options="questionCtrl.options"></form>
+          </div>
+        </div>
+      </div>
+</div>
+<div class="modal-footer">
+    <button class="btn btn-primary" type="button" ng-click="questionCtrl.done(questionForm)">Done</button>
+    <button class="btn btn-warning" type="button" ng-hide="questionCtrl.published" ng-click="questionCtrl.cancel()">Cancel</button>
+</div>

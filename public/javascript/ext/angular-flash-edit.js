@@ -48,8 +48,8 @@
         };
     }]);
 
-    app.factory('Flash', ['$rootScope', '$timeout',
-        function($rootScope, $timeout) {
+    app.factory('Flash', ['$rootScope', '$timeout', '$interval',
+        function($rootScope, $timeout, $interval) {
 
             var dataFactory = {},
                 timeOut;
@@ -57,29 +57,29 @@
             // Create flash message
             dataFactory.create = function(type, text, addClass) {
                 var $this = this;
-                $timeout.cancel(timeOut);
+                $interval.cancel(timeOut);
                 $rootScope.flash.type = type;
                 $rootScope.flash.text = text;
                 $rootScope.flash.addClass = addClass;
-                $timeout(function() {
+                timeOut = $interval(function() {
                     $rootScope.hasFlash = true;
-                }, 100);
-                timeOut = $timeout(function() {
+                }, 100, 1);
+                timeOut = $interval(function() {
                     $this.dismiss();
-                }, $rootScope.flash.timeout);
+                }, $rootScope.flash.timeout, 1);
             };
 
             // Cancel flashmessage timeout function
             dataFactory.pause = function() {
-                $timeout.cancel(timeOut);
+                $interval.cancel(timeOut);
             };
 
             // Dismiss flash message
             dataFactory.dismiss = function() {
-                $timeout.cancel(timeOut);
-                $timeout(function() {
+                $interval.cancel(timeOut);
+                timeOut = $interval(function() {
                     $rootScope.hasFlash = false;
-                });
+                }, 1, 1);
             };
             return dataFactory;
         }

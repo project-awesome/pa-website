@@ -9,11 +9,9 @@ var server;
 
 describe('/instructor', function() {
     before(function(done) {
-        models.sequelize.sync({ force: true }).then(function () {
-            server = app.listen(app.get('port'), function() {
-	            models.sequelize.sync({ force: true }).then(function () {
-                    done();
-	            });
+        server = app.listen(app.get('port'), function() {
+            utils.resetEnvironment(app).then(function() {
+                done();
             });
         });
     });
@@ -35,13 +33,11 @@ describe('/instructor', function() {
                     done();
                 });
             });
-            it('should be the first navigation item', function(done) {
+            it('should be the first navigation item', function() {
                 expect(firstNavItem.getText()).to.eventually.equal('Instructor');
-                done();
             });
-            it('should have class active', function(done) {
+            it('should have class active', function() {
                 expect(firstNavItem.getAttribute('class')).to.eventually.include('active');
-                done();
             });
         });
         describe('Export Questions', function() {
@@ -52,55 +48,63 @@ describe('/instructor', function() {
                     done();
                 });
             });
-            it('should go to /instructor/export', function(done) {
+            it('should go to /instructor/export', function() {
                 expect(browser.getCurrentUrl()).to.eventually.include('/instructor/export');
-                done();
             });
-            it('should have class active', function(done) {
+            it('should have class active', function() {
                 expect(exportNavItem.getAttribute('class')).to.eventually.include('active');
-                done();
             });
         });
-        describe('Quiz Descriptors', function() {
+        describe('All Quiz Descriptors', function() {
+            var allQDsNavItem;
+            before(function(done) {
+                allQDsNavItem = element(by.linkText('All Quiz Descriptors'));
+                allQDsNavItem.click().then(function() {
+                    done();
+                });
+            });
+            it('should go to /instructor/allquizdescriptors', function() {
+                expect(browser.getCurrentUrl()).to.eventually.include('/instructor/allquizdescriptors');
+            });
+            it('should have class active', function() {
+                expect(allQDsNavItem.getAttribute('class')).to.eventually.include('active');
+            });
+        });
+        describe('My Quiz Descriptors', function() {
             describe("when the user is unauthenticated", function() {
                 var qdNavItem, testUser;
                 before(function(done) {
-                    qdNavItem = element(by.linkText('Quiz Descriptors'));
+                    qdNavItem = element(by.linkText('My Quiz Descriptors'));
                     qdNavItem.click().then(function() {
                         done();
                     });
                 });
-                it('should redirect user to /login', function(done) {
+                it('should redirect user to /login', function() {
                     expect(browser.getCurrentUrl()).to.eventually.include('/login');
-                    done();
                 });
             });
 
             describe("when the user is authenticated", function() {
                 var qdNavItem, testUser;
                 before(function(done) {
-                    utils.protractorLogin().then(function(user) {
+                    utils.authenticateTestUser().then(function(user) {
                         testUser = user;
                         browser.get('/instructor').then(function() {
-                            qdNavItem = element(by.linkText('Quiz Descriptors'));
+                            qdNavItem = element(by.linkText('My Quiz Descriptors'));
                             qdNavItem.click().then(function() {
                                 done();
                             });
                         });
                     });
                 });
-                after(function(done) {
-                    utils.protractorLogout().then(function() {
-                        done();
-                    });
+                after(function() {
+                    utils.unauthenticateTestUser();
                 });
-                it('should go to /instructor/quizdescriptors', function(done) {
-                    expect(browser.getCurrentUrl()).to.eventually.include('/instructor/quizdescriptors');
-                    done();
+                it('should go to /instructor/myquizdescriptors', function() {
+                    expect(browser.getCurrentUrl()).to.eventually.include('/instructor/myquizdescriptors');
                 });
-                it('should have class active', function(done) {
+                it('should have class active', function() {
                     expect(qdNavItem.getAttribute('class')).to.eventually.include('active');
-                    done();
                 });
             });
         });

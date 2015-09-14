@@ -10,8 +10,8 @@ var server;
 describe('Navigation Bar', function() {
 
     before(function(done) {
-        models.sequelize.sync({ force: true }).then(function () {
-            server = app.listen(app.get('port'), function() {
+        server = app.listen(app.get('port'), function() {
+            utils.resetEnvironment(app).then(function() {
                 done();
             });
         });
@@ -23,70 +23,81 @@ describe('Navigation Bar', function() {
     });
 
     describe('Navigation Dropdown Menu', function () {
-
+        var navDropDown;
         before(function(done) {
-            browser.get('/');
-            done();
-        });
-
-        beforeEach(function(done) {
-            browser.findElement(by.id('navigation-dropdown')).click().then(function() {
+            browser.get('/').then(function() {
+                navDropDown = element(by.id('navigation-dropdown'));
                 done();
             });
         });
-
-        it('should navigate to /student', function(done) {
-            element(by.id('navigation-links')).element(by.cssContainingText('a','Student')).click();
-            expect(browser.getCurrentUrl()).to.eventually.equal(browser.baseUrl + '/student');
-            done();
+        beforeEach(function() {
+            navDropDown.click();
         });
 
-        it('should navigate to /instructor', function(done) {
-            element(by.id('navigation-links')).element(by.cssContainingText('a','Instructor')).click();
-            expect(browser.getCurrentUrl()).to.eventually.equal(browser.baseUrl + '/instructor');
-            done();
+        it('should navigate to /student', function() {
+            navDropDown.element(by.cssContainingText('a','Student')).click().then(function() {
+                expect(browser.getCurrentUrl()).to.eventually.equal(browser.baseUrl + '/student');
+            });
+        });
+
+        it('should navigate to /instructor', function() {
+            navDropDown.element(by.cssContainingText('a','Instructor')).click().then(function() {
+                expect(browser.getCurrentUrl()).to.eventually.equal(browser.baseUrl + '/instructor');
+            });
         });
         
-        it('should navigate to /author', function(done) {
-            element(by.id('navigation-links')).element(by.cssContainingText('a','Author')).click();
-            expect(browser.getCurrentUrl()).to.eventually.equal(browser.baseUrl + '/author');
-            done();
+        it('should navigate to /author', function() {
+            navDropDown.element(by.cssContainingText('a','Author')).click().then(function() {
+                expect(browser.getCurrentUrl()).to.eventually.equal(browser.baseUrl + '/author');
+            });
         });
         
-        it('should navigate to /developer', function(done) {
-            element(by.id('navigation-links')).element(by.cssContainingText('a','Developer')).click();
-            expect(browser.getCurrentUrl()).to.eventually.equal(browser.baseUrl + '/developer');
-            done();
+        it('should navigate to /developer', function() {
+            navDropDown.element(by.cssContainingText('a','Developer')).click().then(function() {
+                expect(browser.getCurrentUrl()).to.eventually.equal(browser.baseUrl + '/developer');
+            });
         });
 
     });
 
     describe('Home Button', function() {
 
-        it('should take us home when home is clicked', function(done) {
+        before(function(done) {
             browser.get('/student');
             browser.findElement(by.id('home-button')).click();
-            expect(browser.getCurrentUrl()).to.eventually.equal(browser.baseUrl + '/');
             done();
+        });
+
+        it('should take us home when home is clicked', function() {
+            expect(browser.getCurrentUrl()).to.eventually.equal(browser.baseUrl + '/');
         });
     });
     
     describe('User Dropdown Menu', function () {
         var testUser;
-        beforeEach(function(done) {
-            utils.protractorLogin().then(function(user) {
+        before(function(done) {
+            utils.authenticateTestUser().then(function(user) {
                 testUser = user;
                 done();
             });
         });
 
-        afterEach(function(done) {
-            utils.protractorLogout().then(function() {
-                done();
-            });
+        after(function() {
+            utils.unauthenticateTestUser();
         });
 
         describe('Settings Dropdown', function() {
+
+            before(function(done) {
+                browser.get('/').then(function() {
+                    done();
+                });
+            });
+
+            beforeEach(function() {
+                element(by.id('user-dropdown')).click();
+            });
+
             it('should navigate to the /usersettings page', function(done) {
                 element(by.id('user-links')).element(by.cssContainingText('a','Settings')).click();
                 expect(browser.getCurrentUrl()).to.eventually.equal(browser.baseUrl + '/usersettings');

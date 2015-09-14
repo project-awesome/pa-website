@@ -11,7 +11,7 @@ module.exports.createLogoutUrl = function() {
     return '/logout';
 }
 
-module.exports.resetEnvironment = function(a, m) {
+module.exports.resetEnvironment = function(a) {
 	return models.sequelize.sync({ force: true }).then(function () {
 		passportStub.uninstall(a);
 		passportStub.install(a);
@@ -54,40 +54,21 @@ module.exports.waitForElement = function (element) {
     },5000);
     return element;
 };
-var userCount = 0;
-module.exports.protractorLogin = function() {
-	userCount++;
-	var user = {};
-    return browser.get(module.exports.createTestAuthUrl('test', userCount, 'testtoken', 'email@test.com', 'Tester' + userCount, 'student')).then(function() {
-        browser.get('/');
-        module.exports.waitForElement(element(by.id('home-button')));
-        return browser.findElement(by.id('user-dropdown')).click().then(function() {
-            return browser.manage().getCookies().then(function(cookies) {
-            	for (var i = 0; cookies.length > i; i++)
-            		user[cookies[i].name] = cookies[i].value;
-            	return user;
-            });
-        });
-    });
-}
-module.exports.protractorLogout = function() {
-	browser.ignoreSynchronization = true;
-	return browser.get('/logout').then(function() {
-		browser.ignoreSynchronization = false;
-		return browser.get('/').then(function() {
-			return module.exports.waitForElement(element(by.id('home-button')));
-		});
-	});
-}
-
 
 module.exports.validDescriptor = {
     "version" : "0.1",
-    "title" : "Example QuizJSON 1",
-    "quiz": [
+    "questions": [
     	{
 		    "question": "binHexOctDec",
-		    "repeat": 2,
+		    "repeat": 4,
+		    "parameters": {
+		    	"conversions": [
+		    		{ radix: {from:2,to:8}, range:{min:1, max:1024} },
+		    		{ radix: {from:8,to:2}, range:{min:1, max:1024} },
+		    		{ radix: {from:2,to:16}, range:{min:1, max:1024} },
+		    		{ radix: {from:16,to:2}, range:{min:1, max:1024} }
+		    	]
+		    }
 		},
     	{
 		    "question": "changeOfBase",
@@ -96,16 +77,17 @@ module.exports.validDescriptor = {
 	]
 };
 
-module.exports.getSampleQuizDescriptor = function(title) {
+module.exports.getSampleQuizDescriptor = function() {
 	var qd = _und.clone(module.exports.validDescriptor);
-	qd.title = title;
 	return qd;
 }
 
 
 module.exports.insertQuizDescriptor = function(m, title) {
+	if (!title)
+		title = 'Sample Quiz Descriptor';
 	return m.QuizDescriptor.create( 
-		{ descriptor : module.exports.getSampleQuizDescriptor(title) }
+		{ descriptor : module.exports.getSampleQuizDescriptor(), title: title }
 	);
 }
 

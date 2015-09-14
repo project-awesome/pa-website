@@ -2,18 +2,26 @@
 
 <hr>
 
-<button ng-click="quizDescriptors.addQuizDescriptor()" type="submit" class="btn btn-primary btn-lg">Add New</button>
-<div class="form-group" style="padding-top:5px;">
-	<textarea class="form-control" rows="5" id="comment" ng-model="quizDescriptors.quizDescriptorText"></textarea>
+<form name="qdCreateForm" class="form-horizontal">
+	<div class="form-group">
+		<div class="col-sm-2">
+			<button ng-disabled="qdCreateForm.$invalid" ng-click="quizDescriptors.addQuizDescriptor()" type="submit" class="btn btn-primary">Add New</button>
+		</div>
+		<div class="col-sm-7">
+			<input id="quiz-title-input" type="text" class="form-control" ng-model="quizDescriptors.quizDescriptorTitle" placeholder="Quiz Title" required></input>
+		</div>
+	</div>
+</form>
+<div>
+	<br>
 </div>
-
 <div>
 
 	<ul class="quizzes">
 		<li ng-repeat="quiz in quizDescriptors.quizzes">
 			<span><b>{{quiz.id}}</b> </span>
 			<span style="padding-right:10px;"> </span>
-			<a href="/showpage/{{ quiz.id }}">{{ quiz.descriptor | limitTo: 80 }}{{quiz.descriptor.length > 80 ? '...' : ''}}</a>
+			<a href="/quizdescriptor/{{ quiz.id }}">{{ quiz.descriptor | limitTo: 80 }}{{quiz.descriptor.length > 80 ? '...' : ''}}</a>
 		</li>
 	</ul>
 

@@ -22,8 +22,8 @@ module.exports = function(app) {
             if (!qd) {
                 res.status(404).end();
             } else {
-            	var quiz = projectAwesome.QuizBuilder.build(qd.descriptor, qd.id, req.params.seed);
-            	res.json(quiz);
+            	var quiz = projectAwesome.buildQuiz(qd.descriptor, qd.id, req.params.seed);
+            	res.json({ quiz: quiz, title: qd.title });
             }
         });
         
