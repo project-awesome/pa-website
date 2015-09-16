@@ -5,8 +5,6 @@ var utils = require("../../utils");
 var app = require('../../../app.js');
 var models = require('../../../models');
 
-var projectAwesome = require("project-awesome");
-
 var validDescriptor= utils.validDescriptor;
 var server;
 
@@ -54,7 +52,7 @@ describe('Quiz API', function() {
         it('should respond with 404 not found', function(done) {
             request(app)
             .get('/api/quiz/'+qd.id+'/1234567t')
-            .expect(404)
+            .expect(400)
             .end(done);
         });
 
@@ -65,7 +63,7 @@ describe('Quiz API', function() {
         it('should respond with 404 Not Found if the seed is not an 8 digit hex string', function(done) {
           request(app)
           .get('/api/quiz/'+qd.id+'/123456f')
-          .expect(404)
+          .expect(400)
           .end(done);
         });
 
@@ -76,7 +74,7 @@ describe('Quiz API', function() {
         it('should respond with 404 Not Found if the seed is not an 8 digit hex string', function(done) {
           request(app)
           .get('/api/quiz/'+qd.id+'/12345678f')
-          .expect(404)
+          .expect(400)
           .end(done);
         });
 
@@ -86,14 +84,13 @@ describe('Quiz API', function() {
 
     describe('valid seed, valid id', function() {
 
-      it('should respond with 200 and a valid json quiz with seed set correctly', function(done) {
+      it('should respond with 200 and a quiz object in the body', function(done) {
           request(app)
           .get('/api/quiz/'+qd.id+'/1234abcd')
           .expect(200)
           .end(function(err, res) {
             if (err) return done(err);
             expect(res.body.quiz.seed).to.equal('1234abcd');
-            expect(projectAwesome.QuizValidator.isValid(res.body.quiz)).to.be.true;
             done();
           });
       });

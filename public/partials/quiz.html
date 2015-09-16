@@ -3,7 +3,7 @@
 	<div class="col-sm-6 col-sm-offset-2">
 
 		<h1>{{ quizCtrl.title }}</h1>
-		<div>ID: <span id="quiz-id">{{ quizCtrl.quiz.id }}</span></div>
+		<div>ID: <span id="quiz-id">{{ quizCtrl.id }}</span></div>
 		<div>Seed: <span id="quiz-seed">{{ quizCtrl.seed }}</span></div>
 
 		<hr>
@@ -64,7 +64,7 @@
 		
 		<br>
 		<button ng-show="!quizCtrl.graded" type="submit" class="btn btn-success btn-lg" ng-click="quizCtrl.gradeQuiz()">Check Answers</button>
-		<a ng-show="quizCtrl.graded" href="/quiz/{{quizCtrl.quiz.id}}" class="btn btn-success btn-lg">Done</a>
+		<a ng-show="quizCtrl.graded" href="/quiz/{{quizCtrl.id}}" class="btn btn-success btn-lg">Done</a>
 
 	</div>
 	

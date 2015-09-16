@@ -1,4 +1,4 @@
-var projectAwesome = require("project-awesome");
+var request = require('request');
 
 function isValidId(n) {
     return /^\d+$/.test(n);
@@ -7,14 +7,7 @@ function isValidId(n) {
 module.exports = function(app) {
 
     app.get('/api/question/moodle/:questionType/:seed', function(req, res) {
-        if (!projectAwesome.isValidQuestionType(req.params.questionType)) {
-            res.status(404).end();
-            return;
-        }
-        if (!projectAwesome.isSeedValid(req.params.seed)) {
-            res.status(404).end();
-            return;
-        }
+
         var count = 20;
         if (req.query.count) {
             count = parseInt(req.query.count);
@@ -23,12 +16,24 @@ module.exports = function(app) {
                 return;
             }
         }
-        res.set('Content-Type', 'text/xml');
-        try {
-            res.send(projectAwesome.generateMoodleXML(req.params.questionType, count, req.params.questionType, req.params.seed));
-        } catch (e) {
-            res.status(400).end();
-        }
+
+        var reqUrl = 'https://pa-service-prod.herokuapp.com/v1/generate_moodle_xml';
+        reqUrl = reqUrl + '?question_type=' + req.params.questionType;
+        reqUrl = reqUrl + '&question_name=' + req.params.questionType;
+        reqUrl = reqUrl + '&count=' + count;
+        reqUrl = reqUrl + '&seed=' + req.params.seed;
+
+        request.get(
+            reqUrl,
+            function (paError, paResponse, body) {
+                if (paError || paResponse.statusCode != 200) {
+                    res.status(paResponse.statusCode).end();
+                    return;
+                }
+                res.set('Content-Type', 'text/xml');
+                res.send(body);
+            }
+        );
         
         
     });

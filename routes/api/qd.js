@@ -1,5 +1,5 @@
 var models = require('../../models');
-var projectAwesome = require("project-awesome");
+var request = require('request');
 
 function isValidId(n){
     return /^\d+$/.test(n);
@@ -23,34 +23,43 @@ module.exports = function(app) {
             res.status(400).end();
             return;
         }
+        request.post(
+            'https://pa-service-prod.herokuapp.com/v1/validate_quiz_descriptor',
+            { json: { descriptor: req.body.descriptor } },
+            function (paError, paResponse, syntaxErrors) {
+                if (paError || paResponse.statusCode != 200) {
+                    res.status(503).end();
+                    return;
+                }
+                var params = {};
+                if (syntaxErrors.length > 0) {
+                    res.status(400).end();
+                    return;
+                } else {
+                    params.descriptor = req.body.descriptor;
+                }
 
-        var syntaxErrors = projectAwesome.validateQuizDescriptor(req.body.descriptor);
-        var params = {};
-        if (syntaxErrors.length > 0) {
-            res.status(400).end();
-            return;
-        } else {
-            params.descriptor = req.body.descriptor;
-        }
+                if ('title' in req.body) {
+                    if (typeof req.body.title !== 'string') {
+                        res.status(400).end();
+                        return;
+                    } else {
+                        params.title = req.body.title;
+                    }
+                }
 
-        if ('title' in req.body) {
-            if (typeof req.body.title !== 'string') {
-                res.status(400).end();
-                return;
-            } else {
-                params.title = req.body.title;
+                models.User.findOne({ where: {awesome_id: req.user.awesome_id} }).then(function(user) {
+                    if (user) {
+                        user.createQuizDescriptor(params).then(function(qd) {
+                            res.json(qd);
+                        }).catch(function(error) {
+                            res.status(500).end();
+                        })
+                    }
+                });
+
             }
-        }
-
-        models.User.findOne({ where: {awesome_id: req.user.awesome_id} }).then(function(user) {
-            if (user) {
-                user.createQuizDescriptor(params).then(function(qd) {
-                    res.json(qd);
-                }).catch(function(error) {
-                    res.status(500).end();
-                })
-            }
-        });
+        );
         
         
     });
@@ -101,22 +110,6 @@ module.exports = function(app) {
                 updateRequest.published = req.body.published;
                 emptyRequest = false;
             }
-            if ('descriptor' in req.body) {
-
-                var syntaxErrors = projectAwesome.validateQuizDescriptor(req.body.descriptor);
-                if (syntaxErrors.length > 0) {
-                    res.status(400).end();
-                    return;
-                }
-                if (qd.published === true) {
-                    console.log("Trying to edit a published quiz.");
-                    res.status(400).end();
-                    return;
-                }
-                updateRequest.descriptor = req.body.descriptor;
-                emptyRequest = false;
-            }
-
 
             if ('title' in req.body) {
                 if (typeof req.body.title !== 'string') {
@@ -128,16 +121,48 @@ module.exports = function(app) {
                 emptyRequest = false;
             }
 
-            if (emptyRequest) {
-                res.status(400).end();
-                return;
+            if ('descriptor' in req.body) {
+
+                if (qd.published === true) {
+                    console.log("Trying to edit a published quiz.");
+                    res.status(400).end();
+                    return;
+                }
+
+
+                request.post(
+                    'https://pa-service-prod.herokuapp.com/v1/validate_quiz_descriptor',
+                    { json: { descriptor: req.body.descriptor } },
+                    function (paError, paResponse, syntaxErrors) {
+                        if (paError || paResponse.statusCode != 200) {
+                            res.status(503).end();
+                            return;
+                        }
+                        if (syntaxErrors.length > 0) {
+                            res.status(400).end();
+                            return;
+                        }
+                        updateRequest.descriptor = req.body.descriptor;
+                        qd.updateAttributes(updateRequest).then(function(updatedQD) {
+                            res.json(updatedQD);
+                        }).catch(function(error) {
+                            res.status(500).end();
+                        });
+                    }
+                );
+
+            } else {
+                if (emptyRequest) {
+                    res.status(400).end();
+                    return;
+                }
+                qd.updateAttributes(updateRequest).then(function(updatedQD) {
+                    res.json(updatedQD);
+                }).catch(function(error) {
+                    res.status(500).end();
+                });
             }
 
-            qd.updateAttributes(updateRequest).then(function(updatedQD) {
-                res.json(updatedQD);
-            }).catch(function(error) {
-                res.status(500).end();
-            })
 
 
         });

@@ -944,11 +944,15 @@ describe('Angular Controllers', function() {
 		});
 
 		describe('quiz', function() {
-
 			it('should have set quiz to the quiz service result', function() {
 				expect(controller.quiz).to.eql(QuizMock.quiz);
 			});
+		});
 
+		describe('id', function() {
+			it('should have set id to the $stateParams id parameter', function() {
+				expect(controller.id).to.equal(StateParamsMock.id);
+			});
 		});
 
 		describe('seed', function() {

@@ -209,6 +209,7 @@ awesomeApp.controller('QuestionExportCtrl', ['PAQuestions', 'SeedGenerator', '$w
 awesomeApp.controller('QuizCtrl', [ 'quiz', '$stateParams', function(quiz, $stateParams) {
     var vm = this;
     vm.quiz = quiz.quiz;
+    vm.id = $stateParams.id;
     vm.title = quiz.title;
     vm.seed = $stateParams.seed;
     vm.showQuestions = true;
