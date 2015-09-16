@@ -52,7 +52,7 @@ describe('Quiz API', function() {
         it('should respond with 404 not found', function(done) {
             request(app)
             .get('/api/quiz/'+qd.id+'/1234567t')
-            .expect(404)
+            .expect(400)
             .end(done);
         });
 
@@ -63,7 +63,7 @@ describe('Quiz API', function() {
         it('should respond with 404 Not Found if the seed is not an 8 digit hex string', function(done) {
           request(app)
           .get('/api/quiz/'+qd.id+'/123456f')
-          .expect(404)
+          .expect(400)
           .end(done);
         });
 
@@ -74,7 +74,7 @@ describe('Quiz API', function() {
         it('should respond with 404 Not Found if the seed is not an 8 digit hex string', function(done) {
           request(app)
           .get('/api/quiz/'+qd.id+'/12345678f')
-          .expect(404)
+          .expect(400)
           .end(done);
         });
 

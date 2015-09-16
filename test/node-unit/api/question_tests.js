@@ -30,10 +30,10 @@ describe('Question Exporting API', function() {
 
             describe('invalid question types', function() {
 
-                it('should respond with 404 not found', function(done) {
+                it('should respond with 400 not found', function(done) {
                     request(app)
                     .get('/api/question/moodle/questiontypeDNE/' + seed)
-                    .expect(404)
+                    .expect(400)
                     .end(done);
                 });
 
@@ -42,10 +42,10 @@ describe('Question Exporting API', function() {
         });
 
         describe('invalid seed', function() {
-            it('should respond with 404 not found', function(done) {
+            it('should respond with 400 not found', function(done) {
                 request(app)
                 .get('/api/question/moodle/changeOfBase/' + '1234')
-                .expect(404)
+                .expect(400)
                 .end(done);
             });
         });
